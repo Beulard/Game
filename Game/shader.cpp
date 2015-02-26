@@ -12,6 +12,10 @@ namespace shader {
 		shader_array = array::create(sizeof(GLuint), nb_shaders);
 	}
 
+	void destroy() {
+		array::destroy(&shader_array);
+	}
+
 	bool check_shader_compiled(GLuint id) {
 		GLint compiled = GL_FALSE;
 		glGetShaderiv(id, GL_COMPILE_STATUS, &compiled);

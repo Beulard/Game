@@ -41,6 +41,7 @@ int main(int argc, char** argv) {
 
 	Init(width, height);
 
+
 	resource::add_image_png("grass.png");
 	resource::add_shader("sprite.vs");
 	resource::add_shader("sprite.fs");
@@ -75,7 +76,6 @@ int main(int argc, char** argv) {
 
 	glfwSetKeyCallback(window, key_callback);
 
-	//static GLfloat quad[] = { -0.25, -0.25, 0.25, -0.25, 0.25, 0.25, -0.25, 0.25 };
 	static GLfloat quad[] = { 0, 0, 400, 0, 400, 400, 0, 400 };
 	static GLfloat texcoords[] = { 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0 };
 	static GLfloat color[] = { 1.f, 1.f, 1.f, 0.7f };
@@ -96,7 +96,7 @@ int main(int argc, char** argv) {
 
 	while (!glfwWindowShouldClose(window)) {
 
-		glClearColor(.2, .2, .2, 0);
+		glClearColor(.2f, .2f, .2f, 0.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		glfwPollEvents();
 
@@ -131,10 +131,7 @@ int main(int argc, char** argv) {
 		glDisableVertexAttribArray(attrib_coords);
 
 		glfwSwapBuffers(window);
-	}
-	//	free up gl resources
-	//glDeleteProgram(program);
-	
+	}	
 	//	clean up
 	resource::destroy();
 	texture::destroy();

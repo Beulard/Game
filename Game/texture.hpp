@@ -1,7 +1,13 @@
 #pragma once
 #include "types.hpp"
+#include "vec2.hpp"
 
 namespace texture {
+
+	struct texture {
+		GLuint id;
+		vec2i size;
+	};
 
 	//	initialize the texture array
 	void init(u32 count);
@@ -12,6 +18,8 @@ namespace texture {
 
 	//	bind the texture for opengl usage
 	void bind(u32 id);
+
+	const vec2i& get_size(u32 id);
 
 }
 
