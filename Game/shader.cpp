@@ -1,8 +1,7 @@
 #include "shader.hpp"
 #include "array.hpp"
-#include "GL/glew.h"
-//	TODO Remove
 #include <cstdio>
+#include <cstdlib>
 
 namespace shader {
 
@@ -17,20 +16,38 @@ namespace shader {
 		GLint compiled = GL_FALSE;
 		glGetShaderiv(id, GL_COMPILE_STATUS, &compiled);
 		if(compiled != GL_TRUE) {
-			printf("Couldn't compile vertex shader");
-			//print_shader_log(id);
+			printf("Couldn't compile vertex shader. Printing log:\n");
+			GLint log_length = 0;
+			glGetShaderiv(id, GL_INFO_LOG_LENGTH, &log_length);
+			char* log = (char*)malloc(log_length);
+			glGetShaderInfoLog(id, log_length, NULL, log);
+			printf("%s", log);
+			free(log);
+
 			return false;
 		}
 		return true;
 	}
 
-	void print_shader_log(GLuint id) {
+	bool check_program_linked(GLuint id) {
+		GLint compiled = GL_FALSE;
+		glGetProgramiv(id, GL_LINK_STATUS, &compiled);
+		if (compiled != GL_TRUE) {
+			printf("Couldn't link program. Printing log:\n");
+			GLint log_length = 0;
+			glGetProgramiv(id, GL_INFO_LOG_LENGTH, &log_length);
+			char* log = (char*)malloc(log_length);
+			glGetProgramInfoLog(id, log_length, NULL, log);
+			printf("%s", log);
+			free(log);
 
+			return false;
+		}
+		return true;
 	}
 
-	u32 make(const char* vs_code, const char* fs_code) {
+	int make(const char* vs_code, const char* fs_code) {
 		u32 id = next_available++;
-		printf("remove me : ID = %d\n", id);
 		GLuint* glid = (GLuint*)array::at(&shader_array, id);
 		*glid = glCreateProgram();
 
@@ -53,7 +70,22 @@ namespace shader {
 		else
 			return -1;
 
+		glLinkProgram(*glid);
+		if (!check_program_linked(*glid))
+			return -1;
+
 		return id;
 	}
 
+	void use(u32 id) {
+		glUseProgram(*(GLuint*)array::at(&shader_array, id));
+	}
+
+	GLint get_attrib_location(u32 id, const char* name) {
+		return glGetAttribLocation(*(GLuint*)array::at(&shader_array, id), name);
+	}
+
+	GLint get_uniform_location(u32 id, const char* name) {
+		return glGetUniformLocation(*(GLuint*)array::at(&shader_array, id), name);
+	}
 }

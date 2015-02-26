@@ -7,8 +7,8 @@ namespace resource {
 		u8* bytes;
 		//	Width, length
 		int x, y;
-		//	Number of channels
-		int n;
+		//	Number of channels, or bytes per pixel
+		int bpp;
 	};
 
 
@@ -33,8 +33,15 @@ namespace resource {
 	//	Start/update the loading of files
 	void loading_start();
 
+	//	returns the image loaded and stored at 'name'
 	image_data* get_image(const std::string& name);
+	//	returns the shader loaded and stored at 'name'
 	shader_data* get_shader(const std::string& name);
+
+	//	returns the number of images
+	u32 get_image_count();
+	//	returns the number of shaders
+	u32 get_shader_count();
 	
 	void destroy();
 }

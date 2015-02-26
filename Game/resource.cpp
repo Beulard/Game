@@ -63,6 +63,14 @@ namespace resource {
 		return &shader_data_map[name];
 	}
 
+	u32 get_image_count() {
+		return image_files.size();
+	}
+
+	u32 get_shader_count() {
+		return shader_files.size();
+	}
+
 	void destroy() {
 		//	free every image loaded by stb
 		for (auto it = image_data_map.begin(); it != image_data_map.end(); ++it) {
