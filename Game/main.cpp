@@ -4,6 +4,7 @@
 #include "resource.hpp"
 #include "texture.hpp"
 #include "shader.hpp"
+#include "sprite.hpp"
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
@@ -20,6 +21,7 @@ bool Init(u32 width, u32 height) {
 		return false;
 	}
 
+	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 	window = glfwCreateWindow(width, height, "Game desu", NULL, NULL);
 	if (!window){
 		glfwTerminate();
@@ -49,6 +51,7 @@ int main(int argc, char** argv) {
 
 	texture::init(resource::get_image_count());
 	shader::init(resource::get_shader_count());
+	
 
 
 	resource::image_data* grass = resource::get_image("grass.png");
@@ -56,8 +59,8 @@ int main(int argc, char** argv) {
 
 
 	float projection[] = {
-		2/(float)width, 0, 0, -1,
-		0, -2/(float)height, 0, 1,
+		2 / (float)width, 0, 0, -1,
+		0, -2 / (float)height, 0, 1,
 		0, 0, -2, 1,
 		0, 0, 0, 1
 	};
@@ -67,72 +70,37 @@ int main(int argc, char** argv) {
 
 	auto shader_sprite = shader::make(vertex->code.c_str(), fragment->code.c_str());
 
-	GLint attrib_coords = shader::get_attrib_location(shader_sprite, "coords");
-	GLint attrib_texcoords = shader::get_attrib_location(shader_sprite, "texcoords");
-
-	GLint uniform_color = shader::get_uniform_location(shader_sprite, "color");
-	GLint uniform_texture = shader::get_uniform_location(shader_sprite, "texture");
-	GLint uniform_projection = shader::get_uniform_location(shader_sprite, "projection");
-
 	glfwSetKeyCallback(window, key_callback);
 
-	static GLfloat quad[] = { 0, 0, 400, 0, 400, 400, 0, 400 };
-	static GLfloat texcoords[] = { 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0 };
-	static GLfloat color[] = { 1.f, 1.f, 1.f, 0.7f };
 
-	//	upload vertex coordinates
-	GLuint vertex_buffer;
-	glGenBuffers(1, &vertex_buffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(quad), quad, GL_DYNAMIC_DRAW);
+	sprite::init(1);
+	sprite::set_projection(projection);
 
-	//	upload texture coordinates
-	GLuint texcoords_buffer;
-	glGenBuffers(1, &texcoords_buffer);
-	glBindBuffer(GL_ARRAY_BUFFER, texcoords_buffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(texcoords), texcoords, GL_DYNAMIC_DRAW);
-	
-	glActiveTexture(GL_TEXTURE0);
+	auto batch1 = sprite::make_batch(80 * 60, grass_tex, shader_sprite);
+
+	auto sprites = array::create(sizeof(sprite::sprite), 80 * 60);
+	for (u32 j = 0; j < 60; ++j) {
+		for (u32 i = 0; i < 80; ++i) {
+			sprite::sprite* s = (sprite::sprite*)array::at(&sprites, j * 80 + i);
+			*s = sprite::make(i * 10, j * 10, 10, 10, { 32, 0, 64, 32 }, { 0, 255, 255, 0 });
+		}
+	}
 
 	while (!glfwWindowShouldClose(window)) {
-
 		glClearColor(.2f, .2f, .2f, 0.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		glfwPollEvents();
 
-		//	specify shader program
-		shader::use(shader_sprite);
+		for (u32 i = 0; i < 80 * 60; ++i) {
+			sprite::draw((sprite::sprite*)array::at(&sprites, i), batch1);
+		}
 
-		//	send color
-		glUniform4fv(uniform_color, 1, color);
-
-		//	bind and send texture
-		texture::bind(grass_tex);
-		glUniform1i(uniform_texture, 0);
-
-		//	send projection matrix
-		glUniformMatrix4fv(uniform_projection, 1, GL_TRUE, projection);
-
-		//	send vertex attribute
-		glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-		glEnableVertexAttribArray(attrib_coords);
-		glVertexAttribPointer(attrib_coords, 2, GL_FLOAT, GL_FALSE, 0, 0);
-
-		//	send texture coordinates
-		glBindBuffer(GL_ARRAY_BUFFER, texcoords_buffer);
-		glEnableVertexAttribArray(attrib_texcoords);
-		glVertexAttribPointer(attrib_texcoords, 2, GL_FLOAT, GL_FALSE, 0, 0);
-
-		//	draw
-		glDrawArrays(GL_QUADS, 0, 4);
-		
-		//	disable attribs
-		glDisableVertexAttribArray(attrib_texcoords);
-		glDisableVertexAttribArray(attrib_coords);
+		sprite::render_batch(batch1);
 
 		glfwSwapBuffers(window);
 	}	
 	//	clean up
+	sprite::destroy();
 	resource::destroy();
 	texture::destroy();
 	glfwTerminate();

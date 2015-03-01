@@ -14,6 +14,7 @@ namespace texture {
 	int make(u8* bytes, int x, int y, int bpp) {
 		u32 id = next_available++;
 		texture* tex = (texture*)array::at(&textures, id);
+		tex->size = { x, y };
 		glGenTextures(1, &tex->id);
 		glBindTexture(GL_TEXTURE_2D, tex->id);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);

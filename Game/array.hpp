@@ -25,8 +25,6 @@ namespace array {
 	void* at(array* a, u32 index);
 	const u32 get_item_count(array* a);
 	const u32 get_item_size(array* a);
-	void set(array* a, int value, u32 index, u32 count = 1);
-	void zero(array* a, u32 index, u32 count = 1);
 	void zero_all(array* a);
 
 }

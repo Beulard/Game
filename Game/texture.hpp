@@ -1,6 +1,5 @@
 #pragma once
 #include "types.hpp"
-#include "vec2.hpp"
 
 namespace texture {
 
