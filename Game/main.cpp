@@ -5,6 +5,7 @@
 #include "texture.hpp"
 #include "shader.hpp"
 #include "sprite.hpp"
+#include "file.hpp"
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
@@ -43,7 +44,6 @@ int main(int argc, char** argv) {
 
 	Init(width, height);
 
-
 	resource::add_image_png("grass.png");
 	resource::add_shader("sprite.vs");
 	resource::add_shader("sprite.fs");
@@ -53,16 +53,15 @@ int main(int argc, char** argv) {
 	shader::init(resource::get_shader_count());
 	
 
-
 	resource::image_data* grass = resource::get_image("grass.png");
 	auto grass_tex = texture::make(grass->bytes, grass->x, grass->y, grass->bpp);
 
 
 	float projection[] = {
-		2 / (float)width, 0, 0, -1,
-		0, -2 / (float)height, 0, 1,
-		0, 0, -2, 1,
-		0, 0, 0, 1
+		2 / (float)width, 0, 0, 0,
+		0, -2 / (float)height, 0, 0,
+		0, 0, -2, 0,
+		-1, 1, 1, 1
 	};
 
 	resource::shader_data* vertex = resource::get_shader("sprite.vs");
@@ -76,7 +75,7 @@ int main(int argc, char** argv) {
 	sprite::init(1);
 	sprite::set_projection(projection);
 
-	auto batch1 = sprite::make_batch(80 * 60, grass_tex, shader_sprite);
+	auto batch1 = sprite::make_batch(80 * 60 + 1, grass_tex, shader_sprite);
 
 	auto sprites = array::create(sizeof(sprite::sprite), 80 * 60);
 	for (u32 j = 0; j < 60; ++j) {
@@ -86,6 +85,8 @@ int main(int argc, char** argv) {
 		}
 	}
 
+	auto s1 = sprite::make(200, 200, 200, 200, { 0, 0, 32, 32 }, { 255, 0, 0, 255 });
+
 	while (!glfwWindowShouldClose(window)) {
 		glClearColor(.2f, .2f, .2f, 0.f);
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -94,7 +95,7 @@ int main(int argc, char** argv) {
 		for (u32 i = 0; i < 80 * 60; ++i) {
 			sprite::draw((sprite::sprite*)array::at(&sprites, i), batch1);
 		}
-
+		sprite::draw(&s1, batch1);
 		sprite::render_batch(batch1);
 
 		glfwSwapBuffers(window);

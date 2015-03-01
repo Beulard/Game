@@ -12,6 +12,8 @@ namespace shader {
 
 	//	tells opengl to use this shader
 	void use(u32 id);
+
+	void add_attrib(const char* name);
 	//	return the attribute location of an attribute from the shader
 	GLint get_attrib_location(u32 id, const char* name);
 	//	same for a uniform variable

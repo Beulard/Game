@@ -3,8 +3,6 @@
 #include "shader.hpp"
 #include "texture.hpp"
 #include <cstring>
-//	TODO REMOVE
-#include <cstdio>
 
 namespace sprite {
 
@@ -36,7 +34,6 @@ namespace sprite {
 		glGenBuffers(1, &batch->vbo);
 		
 		//	assign each attribute and uniform required for rendering
-		//	TODO make the shader do that instead of the batch (the batch should just query those)
 		batch->attrib_coords = shader::get_attrib_location(shader, "coords");
 		batch->attrib_texcoords = shader::get_attrib_location(shader, "texcoords");
 		batch->attrib_color = shader::get_attrib_location(shader, "color");
@@ -124,8 +121,7 @@ namespace sprite {
 
 		//	send texture and projection matrix as uniforms
 		glUniform1i(b->uniform_texture, 0);
-		//	TODO CHANGE GL_TRUE TO GL_FALSE AND CHANGE MATRIX
-		glUniformMatrix4fv(b->uniform_projection, 1, GL_TRUE, projection);
+		glUniformMatrix4fv(b->uniform_projection, 1, GL_FALSE, projection);
 
 		//	upload the vertex coordinates data
 		glBindBuffer(GL_ARRAY_BUFFER, b->vbo);
