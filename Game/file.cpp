@@ -17,9 +17,14 @@ namespace file {
 	}
 
 	array::array read_binary(const char* filename) {
-		int file_size = 0;
+		long file_size = 0;
+		FILE* f = NULL;
+		fopen_s(&f, filename, "rb");
+		fseek(f, 0, SEEK_END);
+		file_size = ftell(f);
 		array::array bytes = array::create(sizeof(u8), file_size);
-		//TODO
+		fseek(f, 0, SEEK_SET);
+		fread((char*)bytes.data + array::HEADER_SIZE, sizeof(u8), file_size, f);
 		return bytes;
 	}
 

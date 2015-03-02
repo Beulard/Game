@@ -53,6 +53,17 @@ int main(int argc, char** argv) {
 	texture::init(resource::get_image_count());
 	shader::init(resource::get_shader_count());
 
+	array::array font_bytes = file::read_binary("calibri32.fnt");
+	u8 char1, char2, char3, version;
+	char1 = *(u8*)array::at(&font_bytes, 0);
+	char2 = *(u8*)array::at(&font_bytes, 1);
+	char3 = *(u8*)array::at(&font_bytes, 2);
+	version = *(u8*)array::at(&font_bytes, 3);
+	if (char1 == 'B' && char2 == 'M' && char3 == 'F' && version == 3)
+		printf("success");
+
+
+
 	//TODO BINARY BITMAP FONT READER
 	
 
