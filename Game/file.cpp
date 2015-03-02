@@ -16,4 +16,11 @@ namespace file {
 		return s.str();
 	}
 
+	array::array read_binary(const char* filename) {
+		int file_size = 0;
+		array::array bytes = array::create(sizeof(u8), file_size);
+		//TODO
+		return bytes;
+	}
+
 }

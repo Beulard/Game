@@ -43,5 +43,6 @@ namespace resource {
 	//	returns the number of shaders
 	u32 get_shader_count();
 	
+	//	clean up all resources
 	void destroy();
 }

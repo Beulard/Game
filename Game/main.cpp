@@ -6,6 +6,7 @@
 #include "shader.hpp"
 #include "sprite.hpp"
 #include "file.hpp"
+#include "stringmap.hpp"
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
@@ -51,6 +52,8 @@ int main(int argc, char** argv) {
 
 	texture::init(resource::get_image_count());
 	shader::init(resource::get_shader_count());
+
+	//TODO BINARY BITMAP FONT READER
 	
 
 	resource::image_data* grass = resource::get_image("grass.png");

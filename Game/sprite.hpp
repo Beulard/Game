@@ -19,17 +19,19 @@ namespace sprite {
 		u8 r, g, b, a;
 	};
 
+	//	RGBA color clamped to the [0.f; 1.f] range
 	struct color_normalized {
 		float r, g, b, a;
 	};
 
+	//	data used by the shader to render a vertex
 	struct vertex_data {
 		vertex pos;
 		vertex tex;
 		color_normalized col;
 	};
 
-	//	sprite data
+	//	sprite data, aka 4 vertices worth of data
 	struct sprite {
 		vertex_data vertices[4];
 	};
