@@ -20,7 +20,7 @@ namespace resource {
 	};
 	struct shader_data {
 		shader_type type;
-		std::string code;
+		char code[1024];
 	};
 
 	//	The add_* functions add the files to the loading list to get loaded while displaying a loading screen

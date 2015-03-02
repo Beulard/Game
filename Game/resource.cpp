@@ -5,7 +5,7 @@
 #include "stb_image.h"
 #include <string>
 #include <vector>
-#include <map>
+#include "stringmap.hpp"
 
 namespace resource {
 	
@@ -14,8 +14,8 @@ namespace resource {
 	static std::vector<std::string> shader_files;
 
 	//	contain the loaded data in string indexed maps
-	static std::map<std::string, image_data> image_data_map;
-	static std::map<std::string, shader_data> shader_data_map;
+	static stringmap::stringmap image_data_map;
+	static stringmap::stringmap shader_data_map;
 
 
 	void add_image_png(const char* filename) {
@@ -32,7 +32,8 @@ namespace resource {
 			//	for each image file added, insert a new entry in the 'image_data_map' and populate the image_data structure
 			int x, y, n;
 			u8* img_bytes = stbi_load(image_files[i].c_str(), &x, &y, &n, 4);
-			auto pair = image_data_map.insert(std::make_pair(image_files[i], image_data{ img_bytes, x, y, n }));
+			image_data data = { img_bytes, x, y, n };
+			stringmap::push(&image_data_map, image_files[i].c_str(), &data);
 		}
 	}
 
@@ -45,22 +46,29 @@ namespace resource {
 				st = ST_FS;
 			else
 				printf("%s : not a valid shader type", shader_files[i].c_str());
-			auto pair = shader_data_map.insert(std::make_pair(shader_files[i], shader_data{ st, file::read_all(shader_files[i].c_str()) }));
+			std::string code = file::read_all(shader_files[i].c_str());
+			shader_data data;
+			data.type = st;
+			strcpy_s(data.code, 1024, code.c_str());
+			stringmap::push(&shader_data_map, shader_files[i].c_str(), &data);
 		}
 	}
 
 	void loading_start() {
+		//	initialize maps
+		image_data_map = stringmap::create(sizeof(image_data), image_files.size());
+		shader_data_map = stringmap::create(sizeof(shader_data), shader_files.size());
 		//	do the actual loading
 		load_images();
 		load_shaders();
 	}
 
 	image_data* get_image(const std::string& name) {
-		return &image_data_map[name];
+		return (image_data*)stringmap::at(&image_data_map, name.c_str());
 	}
 
 	shader_data* get_shader(const std::string& name) {
-		return &shader_data_map[name];
+		return (shader_data*)stringmap::at(&shader_data_map, name.c_str());
 	}
 
 	u32 get_image_count() {
@@ -73,8 +81,8 @@ namespace resource {
 
 	void destroy() {
 		//	free every image loaded by stb
-		for (auto it = image_data_map.begin(); it != image_data_map.end(); ++it) {
-			stbi_image_free(it->second.bytes);
+		for (u32 i = 0; i < image_data_map.count; ++i) {
+			stbi_image_free(((image_data*)stringmap::at(&image_data_map, i))->bytes);
 		}
 	}
 

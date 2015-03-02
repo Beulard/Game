@@ -70,7 +70,7 @@ int main(int argc, char** argv) {
 	resource::shader_data* vertex = resource::get_shader("sprite.vs");
 	resource::shader_data* fragment = resource::get_shader("sprite.fs");
 
-	auto shader_sprite = shader::make(vertex->code.c_str(), fragment->code.c_str());
+	auto shader_sprite = shader::make(vertex->code, fragment->code);
 
 	glfwSetKeyCallback(window, key_callback);
 
