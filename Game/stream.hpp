@@ -1,18 +1,19 @@
 #pragma once
 #include "array.hpp"
 
-namespace stream {
+enum seek_pos {
+	SP_START,
+	SP_CURRENT,
+	SP_END
+};
 
-	enum seek_pos {
-		SP_START,
-		SP_CURRENT,
-		SP_END
-	};
+namespace stream {
 
 	struct stream {
 		array::array data;
-		unsigned long cursor;
-		unsigned long length;
+		u32 cursor;
+		u32 length;
+		u32 item_size;
 	};
 
 	bool read_from_file(stream* s, const char* filename);
@@ -22,16 +23,15 @@ namespace stream {
 	//	returns true if the stream's cursor is at end of the array
 	bool eos(stream* s);
 
-	//	seek to 'pos' starting from 'from', returns absolute position of cursor
-	unsigned long seek(stream* s, long pos, seek_pos from = SP_CURRENT);
-	
-	//	read a byte, advance cursor
-	u8 read_byte(stream* s);
-	//	read a char, advance cursor
-	char read_char(stream* s);
-	//	read a chunk of data of size 'size'
-	void* read_chunk(stream* s, unsigned long size);
-	//	TODO what is unsigned long ? make custom type
+	//	seek to 'pos' starting from 'from', using the size of objects in the array as stride
+	void seek(stream* s, int pos, seek_pos from = SP_CURRENT);
+	//	returns position of cursor
+	u32 tell(stream* s);
+
+	//	read a chunk of data and advances the cursor by 'nb'
+	void* read_chunk(stream* s, u32 nb);
+	//	read next item from the array and advance cursor by 1
+	void* read_next(stream* s);
 
 
 }

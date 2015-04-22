@@ -7,6 +7,7 @@
 #include "sprite.hpp"
 #include "file.hpp"
 #include "stringmap.hpp"
+#include "stream.hpp"
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
@@ -53,8 +54,41 @@ int main(int argc, char** argv) {
 	texture::init(resource::get_image_count());
 	shader::init(resource::get_shader_count());
 
+	struct obj {
+		char c;
+		int x;
+		int y;
+	};
+
+	array::array streamtest = array::create(sizeof(obj), 10);
+	for (u32 i = 0; i < 10; ++i) {
+		obj* o = (obj*)array::at(&streamtest, i);
+		o->x = i + 1;
+		o->y = 10 - i;
+		o->c = 'a' + i;
+	}
+	stream::stream s;
+	stream::read_from_array(&s, streamtest);
+	printf("%d = %d + %d + %d\n", sizeof(obj), sizeof(char), sizeof(int), sizeof(int));
+	printf("%d\n", stream::tell(&s));
+	stream::seek(&s, 0, SP_START);
+	obj* first = (obj*)stream::read_next(&s);
+	printf("%d: %d %d %d\n", stream::tell(&s), first->c, first->x, first->y);
+
+	stream::seek(&s, 1, SP_CURRENT);
+	obj* third = (obj*)stream::read_next(&s);
+	printf("%d: %d %d %d\n", stream::tell(&s), third->c, third->x, third->y);
+
+	stream::seek(&s, 5, SP_START);
+	obj* sixth = (obj*)stream::read_next(&s);
+	printf("%d: %d %d %d\n", stream::tell(&s), sixth->c, sixth->x, sixth->y);
+
+	stream::seek(&s, -1, SP_END);
+	obj* last = (obj*)stream::read_next(&s);
+	printf("%d: %d %d %d\n", stream::tell(&s), last->c, last->x, last->y);
+
 	array::array font_bytes = file::read_binary("calibri32.fnt");
-	long cursor = 0;
+	u32 cursor = 0;
 	char char1, char2, char3, version;
 	char1 = *(u8*)array::at(&font_bytes, cursor++);
 	char2 = *(u8*)array::at(&font_bytes, cursor++);
