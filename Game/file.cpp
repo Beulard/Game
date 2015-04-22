@@ -19,7 +19,11 @@ namespace file {
 	array::array read_binary(const char* filename) {
 		long file_size = 0;
 		FILE* f = NULL;
-		fopen_s(&f, filename, "rb");
+		if (fopen_s(&f, filename, "rb") != 0) {
+			printf("Error reading file '%s'", filename);
+			//	return array with NULL data
+			return{ NULL };
+		}
 		fseek(f, 0, SEEK_END);
 		file_size = ftell(f);
 		array::array bytes = array::create(sizeof(u8), file_size);

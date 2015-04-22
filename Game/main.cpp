@@ -54,13 +54,51 @@ int main(int argc, char** argv) {
 	shader::init(resource::get_shader_count());
 
 	array::array font_bytes = file::read_binary("calibri32.fnt");
-	u8 char1, char2, char3, version;
-	char1 = *(u8*)array::at(&font_bytes, 0);
-	char2 = *(u8*)array::at(&font_bytes, 1);
-	char3 = *(u8*)array::at(&font_bytes, 2);
-	version = *(u8*)array::at(&font_bytes, 3);
+	long cursor = 0;
+	char char1, char2, char3, version;
+	char1 = *(u8*)array::at(&font_bytes, cursor++);
+	char2 = *(u8*)array::at(&font_bytes, cursor++);
+	char3 = *(u8*)array::at(&font_bytes, cursor++);
+	version = *(u8*)array::at(&font_bytes, cursor++);
 	if (char1 == 'B' && char2 == 'M' && char3 == 'F' && version == 3)
-		printf("success");
+		printf("Correct format");
+	
+	u8 block_type = 0;
+	for (u8 block_type = 0; block_type <= 5; block_type = *(u8*)array::at(&font_bytes, cursor++)) {
+		u32 block_size = *(u8*)array::at(&font_bytes, cursor+=4);
+		switch (block_type) {
+			//	info block
+			case 1:
+				u16 font_size;
+			break;
+		
+			//	common block
+			case 2:
+			
+			break;
+		
+			//	pages block
+			case 3:
+		
+			break;
+
+			//	chars block
+			case 4:
+		
+			break;
+			
+			//	kerning pairs block
+			case 5:
+		
+			break;
+		}
+		
+		//	break if we reach the end of file
+		if (cursor >= array::get_item_count(&font_bytes))
+			break;
+	}
+	//	info block
+
 
 
 

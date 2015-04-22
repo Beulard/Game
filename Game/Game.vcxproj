@@ -79,6 +79,7 @@
     <ClCompile Include="resource.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="sprite.cpp" />
+    <ClCompile Include="stream.cpp" />
     <ClCompile Include="stringmap.cpp" />
     <ClCompile Include="texture.cpp" />
   </ItemGroup>
@@ -88,6 +89,7 @@
     <ClInclude Include="resource.hpp" />
     <ClInclude Include="shader.hpp" />
     <ClInclude Include="sprite.hpp" />
+    <ClInclude Include="stream.hpp" />
     <ClInclude Include="stringmap.hpp" />
     <ClInclude Include="texture.hpp" />
     <ClInclude Include="types.hpp" />
