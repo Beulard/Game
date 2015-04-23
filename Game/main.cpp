@@ -158,7 +158,7 @@ int main(int argc, char** argv) {
 	}
 
 
-	//TODO BINARY BITMAP FONT READER
+	//TODO PUT ALL THAT SH*T IN FONT AND LOOK HOW TO MERGE
 	
 
 	resource::image_data* grass = resource::get_image("grass.png");
