@@ -28,6 +28,9 @@ class array {
 		//	returns the item at 'index' as void*
 		void* at(u32 index);
 
+		//	returns true if array was allocated
+		bool is_valid();
+
 		//	returns number of items
 		const u32 get_item_count() const;
 		//	returns item sizes

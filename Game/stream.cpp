@@ -3,11 +3,11 @@
 
 namespace stream {
 
-	byte_instream::byte_instream(array::array a) {
+	byte_instream::byte_instream(array a) {
 		data = a;
 		cursor = 0;
-		if (data.data)
-			length = array::get_item_count(&a) * array::get_item_size(&a);
+		if (data.is_valid())
+			length = data.get_item_count() * data.get_item_size();
 	}
 
 	byte_instream::byte_instream(const char* filename) : byte_instream(file::read_binary(filename)) {
@@ -23,7 +23,7 @@ namespace stream {
 	}
 
 	void byte_instream::close() {
-		array::destroy(&data);
+		data.destroy();
 		cursor = 0;
 		length = 0;
 	}
@@ -47,7 +47,7 @@ namespace stream {
 	}
 
 	void* byte_instream::read_chunk(u32 nb) {
-		void* ret = array::at(&data, cursor);
+		void* ret = data.at(cursor);
 		cursor += nb;
 		return ret;
 	}

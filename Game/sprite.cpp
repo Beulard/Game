@@ -6,7 +6,7 @@
 
 namespace sprite {
 
-	static array::array batches;
+	static array batches;
 	static u32 next_available = 0;
 
 	//	game's projection matrix
@@ -22,12 +22,12 @@ namespace sprite {
 		//	make the active texture GL_TEXTURE0 if it wasn't already
 		glActiveTexture(GL_TEXTURE0);
 		//	initialize the batches array
-		batches = array::array::create(sizeof(spritebatch), count);
+		batches = array::create(sizeof(spritebatch), count);
 	}
 
 	int make_batch(u32 count, u32 texture, u32 shader) {
 		u32 id = next_available++;
-		spritebatch* batch = (spritebatch*)array::at(&batches, id);
+		spritebatch* batch = (spritebatch*)batches.at(id);
 		batch->texture = texture;
 		batch->shader = shader;
 
@@ -46,14 +46,14 @@ namespace sprite {
 
 	void destroy() {
 		//	destroy every sprite from every batch
-		for (u32 i = 0; i < array::get_item_count(&batches); ++i) {
-			spritebatch* b = (spritebatch*)array::at(&batches, i);
+		for (u32 i = 0; i < batches.get_item_count(); ++i) {
+			spritebatch* b = (spritebatch*)batches.at(i);
 			glDeleteBuffers(1, &b->vbo);
-			array::destroy(&b->sprites);
+			b->sprites.destroy();
 		}
 
 		//	destroy every batch
-		array::destroy(&batches);
+		batches.destroy();
 	}
 
 	sprite make(int x, int y, int width, int height, rect subrect, color col) {
@@ -97,22 +97,22 @@ namespace sprite {
 	}
 
 	void draw(sprite* s, u32 batch) {
-		spritebatch* b = (spritebatch*)array::at(&batches, batch);
+		spritebatch* b = (spritebatch*)batches.at(batch);
 		//	simply copy the data from the sprite to the batch's array
-		sprite* dest = (sprite*)array::at(&b->sprites, b->next_available++);
+		sprite* dest = (sprite*)b->sprites.at(b->next_available++);
 		memcpy(dest, s, sizeof(sprite));
 	}
 
 	void render_batch(u32 batch) {
-		spritebatch* b = (spritebatch*)array::at(&batches, batch);
+		spritebatch* b = (spritebatch*)batches.at(batch);
 		//	use opengl to render each sprite from the batch
 		shader::use(b->shader);
 		texture::bind(b->texture);
 
 		//	normalize texture coordinates
 		vec2i tex_size = texture::get_size(b->texture);
-		for (u32 i = 0; i < array::get_item_count(&b->sprites); ++i) {
-			sprite* s = (sprite*)array::at(&b->sprites, i);
+		for (u32 i = 0; i < b->sprites.get_item_count(); ++i) {
+			sprite* s = (sprite*)b->sprites.at(i);
 			for (u32 j = 0; j < 4; ++j) {
 				(float)s->vertices[j].tex.x /= tex_size.x;
 				(float)s->vertices[j].tex.y /= tex_size.y;
@@ -125,7 +125,7 @@ namespace sprite {
 
 		//	upload the vertex coordinates data
 		glBindBuffer(GL_ARRAY_BUFFER, b->vbo);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(sprite) * array::get_item_count(&b->sprites), array::at(&b->sprites, 0), GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(sprite) * b->sprites.get_item_count(), b->sprites.at(0), GL_DYNAMIC_DRAW);
 
 		//	enable attributes
 		glEnableVertexAttribArray(b->attrib_coords);
@@ -138,7 +138,7 @@ namespace sprite {
 		glVertexAttribPointer(b->attrib_color, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_data), (void*)(sizeof(vertex) * 2));
 		
 		//	draw
-		glDrawArrays(GL_QUADS, 0, 4 * array::get_item_count(&b->sprites));
+		glDrawArrays(GL_QUADS, 0, 4 * b->sprites.get_item_count());
 
 		//	disable attribs
 		glDisableVertexAttribArray(b->attrib_color);
@@ -146,7 +146,7 @@ namespace sprite {
 		glDisableVertexAttribArray(b->attrib_coords);
 
 		//	reset the sprite_batch's sprite array after rendering
-		array::zero_all(&b->sprites);
+		b->sprites.zero_all();
 		b->next_available = 0;
 	}
 

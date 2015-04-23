@@ -9,8 +9,8 @@ namespace map {
 	struct stringmap {
 		u32 data_size;
 		u32 count;
-		array::array keys;
-		array::array data;
+		array keys;
+		array data;
 		u32 next_available;
 	};
 

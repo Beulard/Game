@@ -5,7 +5,7 @@
 
 namespace shader {
 
-	static array::array shader_array;
+	static array shader_array;
 	static u32 next_available = 0;
 
 	void init(u32 nb_shaders) {
@@ -13,7 +13,7 @@ namespace shader {
 	}
 
 	void destroy() {
-		array::destroy(&shader_array);
+		shader_array.destroy();
 	}
 
 	bool check_shader_compiled(GLuint id) {
@@ -52,7 +52,7 @@ namespace shader {
 
 	int make(const char* vs_code, const char* fs_code) {
 		u32 id = next_available++;
-		GLuint* glid = (GLuint*)array::at(&shader_array, id);
+		GLuint* glid = (GLuint*)shader_array.at(id);
 		*glid = glCreateProgram();
 
 		GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
@@ -82,14 +82,14 @@ namespace shader {
 	}
 
 	void use(u32 id) {
-		glUseProgram(*(GLuint*)array::at(&shader_array, id));
+		glUseProgram(*(GLuint*)shader_array.at(id));
 	}
 
 	GLint get_attrib_location(u32 id, const char* name) {
-		return glGetAttribLocation(*(GLuint*)array::at(&shader_array, id), name);
+		return glGetAttribLocation(*(GLuint*)shader_array.at(id), name);
 	}
 
 	GLint get_uniform_location(u32 id, const char* name) {
-		return glGetUniformLocation(*(GLuint*)array::at(&shader_array, id), name);
+		return glGetUniformLocation(*(GLuint*)shader_array.at(id), name);
 	}
 }

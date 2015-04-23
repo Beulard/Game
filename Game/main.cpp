@@ -110,7 +110,7 @@ int main(int argc, char** argv) {
 	font_info info = { 0 };
 	font_common common = { 0 };
 	u32 nbChars = 0;
-	array::array chars;
+	array chars;
 	while (1) {
 		u8 block_type = font_stream.read_u8();
 		u32 block_size = font_stream.read_u32();
@@ -141,7 +141,7 @@ int main(int argc, char** argv) {
 				nbChars = block_size / sizeof(font_char);
 				chars = array::create(sizeof(font_char), nbChars);
 				for (u32 i = 0; i < nbChars; ++i) {
-					font_char* c = (font_char*)array::at(&chars, i);
+					font_char* c = (font_char*)chars.at(i);
 					memcpy(c, font_stream.read_chunk(sizeof(font_char)), sizeof(font_char));
 				}
 			break;
@@ -188,7 +188,7 @@ int main(int argc, char** argv) {
 	auto sprites = array::create(sizeof(sprite::sprite), 80 * 60);
 	for (u32 j = 0; j < 60; ++j) {
 		for (u32 i = 0; i < 80; ++i) {
-			sprite::sprite* s = (sprite::sprite*)array::at(&sprites, j * 80 + i);
+			sprite::sprite* s = (sprite::sprite*)sprites.at(j * 80 + i);
 			*s = sprite::make(i * 10, j * 10, 10, 10, { 32, 0, 64, 32 }, { 0, 255, 255, 0 });
 		}
 	}
@@ -201,7 +201,7 @@ int main(int argc, char** argv) {
 		glfwPollEvents();
 
 		for (u32 i = 0; i < 80 * 60; ++i) {
-			sprite::draw((sprite::sprite*)array::at(&sprites, i), batch1);
+			sprite::draw((sprite::sprite*)sprites.at(i), batch1);
 		}
 		sprite::draw(&s1, batch1);
 		sprite::render_batch(batch1);
@@ -209,7 +209,7 @@ int main(int argc, char** argv) {
 		glfwSwapBuffers(window);
 	}	
 	//	clean up
-	array::destroy(&sprites);
+	sprites.destroy();
 
 	sprite::destroy();
 	resource::destroy();

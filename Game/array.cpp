@@ -5,11 +5,13 @@
 
 
 void array::set_item_size(u32 size) {
-	*(u32*)(((u8*)data + ITEM_SIZE_POS)) = size;
+	if (data)
+		*(u32*)(((u8*)data + ITEM_SIZE_POS)) = size;
 }
 
 void array::set_item_count(u32 count) {
-	*(u32*)(((u8*)data + ITEM_COUNT_POS)) = count;
+	if(data)
+		*(u32*)(((u8*)data + ITEM_COUNT_POS)) = count;
 }
 
 
@@ -24,30 +26,42 @@ array array::create(u32 item_size, u32 item_count) {
 
 void array::destroy() {
 	free(data);
+	data = NULL;
 }
 
 void array::resize(u32 count) {
- 	data = realloc(data, HEADER_SIZE + count * get_item_size());
-	set_item_count(count);
+	if (data) {
+		data = realloc(data, HEADER_SIZE + count * get_item_size());
+		set_item_count(count);
+	}
 }
 
 void* array::at(u32 index) {
-	if(index < get_item_count())
+	if(index < get_item_count() && data)
 		return ((u8*)data + HEADER_SIZE + index * get_item_size());
 	else
 		printf("out of bounds !\n");
 	return NULL;
 }
 
+bool array::is_valid() {
+	return !data ? false : true;
+}
+
 const u32 array::get_item_size() const {
-	return *(u32*)(((u8*)data + ITEM_SIZE_POS));
+	if(data)
+		return *(u32*)(((u8*)data + ITEM_SIZE_POS));
+	return 0;
 }
 
 const u32 array::get_item_count() const {
-	return *(u32*)(((u8*)data + ITEM_COUNT_POS));
+	if(data)
+		return *(u32*)(((u8*)data + ITEM_COUNT_POS));
+	return 0;
 }
 
 void array::zero_all() {
-	memset((u8*)data + HEADER_SIZE, 0, get_item_size() * get_item_count());
+	if(data) 
+		memset((u8*)data + HEADER_SIZE, 0, get_item_size() * get_item_count());
 }
 

@@ -31,7 +31,7 @@ namespace stream {
 	class byte_instream : public stream {
 		public:
 			//	set the array to be read from by the stream
-			byte_instream(array::array a);
+			byte_instream(array a);
 			//	read data from a file
 			//	the stream should be closed after being used
 			//	a stream that reads from a file always has an item size of 1
@@ -64,7 +64,7 @@ namespace stream {
 			
 			//	member variables
 			//	the array of binary data
-			array::array data;
+			array data;
 			//	position in the source
 			u32 cursor;
 			//	length of the source

@@ -51,7 +51,7 @@ namespace sprite {
 		GLint uniform_projection;
 
 		u32 next_available;
-		array::array sprites;
+		array sprites;
 	};
 
 	//	set the projection matrix used by the game. It will be stored and used by the shader

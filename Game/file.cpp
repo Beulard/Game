@@ -16,19 +16,19 @@ namespace file {
 		return s.str();
 	}
 
-	array::array read_binary(const char* filename) {
+	array read_binary(const char* filename) {
 		long file_size = 0;
 		FILE* f = NULL;
 		if (fopen_s(&f, filename, "rb") != 0) {
 			printf("Error reading file '%s'", filename);
 			//	return array with NULL data
-			return{ NULL };
+			return array();
 		}
 		fseek(f, 0, SEEK_END);
 		file_size = ftell(f);
-		array::array bytes = array::create(sizeof(u8), file_size);
+		array bytes = array::create(sizeof(u8), file_size);
 		fseek(f, 0, SEEK_SET);
-		fread((char*)bytes.data + array::HEADER_SIZE, sizeof(u8), file_size, f);
+		fread((char*)bytes.at(0), sizeof(u8), file_size, f);
 		return bytes;
 	}
 
