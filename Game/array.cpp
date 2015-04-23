@@ -5,17 +5,6 @@
 
 namespace array {
 
-	array arrays;
-	u32 next_id = 0;
-
-	void init(u32 count) {
-		arrays = create(sizeof(array), count);
-	}
-
-	void destroy() {
-		destroy(&arrays);
-		next_id = 0;
-	}
 
 	void set_item_size(array* a, u32 size) {
 		//memset((char*)a->data + ITEM_SIZE_POS, size, sizeof(u32));
@@ -26,12 +15,6 @@ namespace array {
 		*(u32*)(((u8*)a->data + ITEM_COUNT_POS)) = count;
 	}
 
-	int make(u32 item_size, u32 count) {
-		u32 id = next_id++;
-		array* a = at(&arrays, id);
-		*a = create(item_size, count);
-		return id;
-	}
 
 	array create(u32 item_size, u32 count) {
 		array a;

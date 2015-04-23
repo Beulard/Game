@@ -20,12 +20,6 @@ namespace array {
 		DATA_POS = 8
 	};
 
-	//	initialize array of arrays
-	void init(u32 count);
-	//	destroy all arrays
-	void destroy();
-
-	int make(u32 item_size, u32 count);
 	array create(u32 itemSize, u32 count);
 	void destroy(array* a);
 	void resize(array* a, u32 count);
