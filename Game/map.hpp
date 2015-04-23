@@ -4,7 +4,7 @@
 //	stringmap describes a string indexed map where the data can be anything
 //	and the keys must be 16 characters long C-strings
 //	the data can also be accessed by simple indexes, like in an array
-namespace stringmap {
+namespace map {
 
 	struct stringmap {
 		u32 data_size;

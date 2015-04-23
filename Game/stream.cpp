@@ -3,50 +3,74 @@
 
 namespace stream {
 
-	bool read_from_file(stream* s, const char* filename) {
-		read_from_array(s, file::read_binary(filename));
-		if (!s->data.data)
-			return false;
-		return true;
+	byte_instream::byte_instream(array::array a) {
+		data = a;
+		cursor = 0;
+		if (data.data)
+			length = array::get_item_count(&a) * array::get_item_size(&a);
 	}
 
-	void read_from_array(stream* s, array::array a) {
-		s->data = a;
-		s->cursor = 0;
-		if (s->data.data)
-			s->length = array::get_item_count(&a);
+	byte_instream::byte_instream(const char* filename) : byte_instream(file::read_binary(filename)) {
+
 	}
 
-	bool eos(stream* s) {
-		return s->cursor >= s->length;
+	byte_instream::~byte_instream() {
+		close();
 	}
 
-	void seek(stream* s, int pos, seek_pos from) {
+	bool byte_instream::eos() {
+		return cursor >= length;
+	}
+
+	void byte_instream::close() {
+		array::destroy(&data);
+		cursor = 0;
+		length = 0;
+	}
+
+	void byte_instream::seek(int pos, seek_pos from) {
 		switch (from) {
 			case SP_START:
-				s->cursor = pos;
+				cursor = pos;
 			break;
 			case SP_CURRENT:
-				s->cursor += pos;
+				cursor += pos;
 			break;
 			case SP_END:
-				s->cursor = s->length + pos;
+				cursor = length + pos;
 			break;
 		}
 	}
 
-	u32 tell(stream* s) {
-		return s->cursor;
+	u32 byte_instream::tell() {
+		return cursor;
 	}
 
-	void* read_chunk(stream* s, u32 nb) {
-		void* ret = array::at(&s->data, s->cursor);
-		s->cursor += nb;
+	void* byte_instream::read_chunk(u32 nb) {
+		void* ret = array::at(&data, cursor);
+		cursor += nb;
 		return ret;
 	}
 
-	void* read_next(stream* s) {
-		return read_chunk(s, 1);
+	u8 byte_instream::read_u8() {
+		return *(u8*)read_chunk(1);
+	}
+
+	char byte_instream::read_char() {
+		return *(char*)read_chunk(1);
+	}
+
+	u16 byte_instream::read_u16() {
+		return *(u16*)read_chunk(2);
+	}
+
+	u32 byte_instream::read_u32() {
+		return *(u32*)read_chunk(4);
+	}
+
+	int byte_instream::read_int() {
+		return *(int*)read_chunk(4);
+
 	}
 
 }

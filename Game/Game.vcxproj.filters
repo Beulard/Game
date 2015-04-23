@@ -36,10 +36,13 @@
     <ClCompile Include="sprite.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="stringmap.cpp">
+    <ClCompile Include="stream.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="stream.cpp">
+    <ClCompile Include="map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="font.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -65,10 +68,13 @@
     <ClInclude Include="sprite.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="stringmap.hpp">
+    <ClInclude Include="stream.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="stream.hpp">
+    <ClInclude Include="map.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="font.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

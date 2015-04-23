@@ -1,7 +1,7 @@
-#include "stringmap.hpp"
+#include "map.hpp"
 #include <cstring>
 
-namespace stringmap {
+namespace map {
 	
 	stringmap create(u32 data_size, u32 count) {
 		stringmap map;

@@ -6,7 +6,7 @@
 #include "shader.hpp"
 #include "sprite.hpp"
 #include "file.hpp"
-#include "stringmap.hpp"
+#include "map.hpp"
 #include "stream.hpp"
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -54,86 +54,106 @@ int main(int argc, char** argv) {
 	texture::init(resource::get_image_count());
 	shader::init(resource::get_shader_count());
 
-	struct obj {
-		char c;
-		int x;
-		int y;
+	stream::byte_instream font_stream("calibri32.fnt");
+	char b, m, f, version;
+	b = font_stream.read_u8();
+	m = font_stream.read_u8();
+	f = font_stream.read_u8();
+	version = font_stream.read_u8();
+	if (b == 'B' && m == 'M' && f == 'F' && version == 3)
+		printf("Correct format\n");
+
+	
+	struct font_info {
+		u16 fontSize;
+		u8 bitField;
+		u8 charSet;
+		u16 stretchH;
+		u8 aa;
+		u8 paddingUp;
+		u8 paddingRight;
+		u8 paddingDown;
+		u8 paddingLeft;
+		u8 paddingHoriz;
+		u8 paddingVert;
+		u8 outline;
+		char fontName[64];
 	};
 
-	array::array streamtest = array::create(sizeof(obj), 10);
-	for (u32 i = 0; i < 10; ++i) {
-		obj* o = (obj*)array::at(&streamtest, i);
-		o->x = i + 1;
-		o->y = 10 - i;
-		o->c = 'a' + i;
-	}
-	stream::stream s;
-	stream::read_from_array(&s, streamtest);
-	printf("%d = %d + %d + %d\n", sizeof(obj), sizeof(char), sizeof(int), sizeof(int));
-	printf("%d\n", stream::tell(&s));
-	stream::seek(&s, 0, SP_START);
-	obj* first = (obj*)stream::read_next(&s);
-	printf("%d: %d %d %d\n", stream::tell(&s), first->c, first->x, first->y);
+	struct font_common {
+		u16 lineHeight;
+		u16 base;
+		u16 scaleW;
+		u16 scaleH;
+		u16 pages;
+		u8 bitField;
+		u8 alphaChnl;
+		u8 redChnl;
+		u8 greenChnl;
+		u8 blueChnl;
+	};
 
-	stream::seek(&s, 1, SP_CURRENT);
-	obj* third = (obj*)stream::read_next(&s);
-	printf("%d: %d %d %d\n", stream::tell(&s), third->c, third->x, third->y);
+	struct font_char {
+		u32 id;
+		u16 x;
+		u16 y;
+		u16 width;
+		u16 height;
+		u16 xoffset;
+		u16 yoffset;
+		u16 xadvance;
+		u8 page;
+		u8 chnl;
+	};
 
-	stream::seek(&s, 5, SP_START);
-	obj* sixth = (obj*)stream::read_next(&s);
-	printf("%d: %d %d %d\n", stream::tell(&s), sixth->c, sixth->x, sixth->y);
 
-	stream::seek(&s, -1, SP_END);
-	obj* last = (obj*)stream::read_next(&s);
-	printf("%d: %d %d %d\n", stream::tell(&s), last->c, last->x, last->y);
-
-	array::array font_bytes = file::read_binary("calibri32.fnt");
-	u32 cursor = 0;
-	char char1, char2, char3, version;
-	char1 = *(u8*)array::at(&font_bytes, cursor++);
-	char2 = *(u8*)array::at(&font_bytes, cursor++);
-	char3 = *(u8*)array::at(&font_bytes, cursor++);
-	version = *(u8*)array::at(&font_bytes, cursor++);
-	if (char1 == 'B' && char2 == 'M' && char3 == 'F' && version == 3)
-		printf("Correct format");
-	
-	u8 block_type = 0;
-	for (u8 block_type = 0; block_type <= 5; block_type = *(u8*)array::at(&font_bytes, cursor++)) {
-		u32 block_size = *(u8*)array::at(&font_bytes, cursor+=4);
+	font_info info = { 0 };
+	font_common common = { 0 };
+	u32 nbChars = 0;
+	array::array chars;
+	while (1) {
+		u8 block_type = font_stream.read_u8();
+		u32 block_size = font_stream.read_u32();
+		if (block_type > 5)
+			printf("Error reading BMF font description file");
+			break;
 		switch (block_type) {
 			//	info block
 			case 1:
-				u16 font_size;
+				memcpy(&info, font_stream.read_chunk(block_size), block_size);
 			break;
 		
 			//	common block
 			case 2:
-			
+				memcpy(&common, font_stream.read_chunk(block_size), block_size);
 			break;
 		
 			//	pages block
 			case 3:
-		
+				//	nothing really interesting here let's just skip it
+				font_stream.seek(block_size, SP_CURRENT);
 			break;
 
 			//	chars block
 			case 4:
-		
+				nbChars = block_size / sizeof(font_char);
+				chars = array::create(sizeof(font_char), nbChars);
+				for (u32 i = 0; i < nbChars; ++i) {
+					font_char* c = (font_char*)array::at(&chars, i);
+					memcpy(c, font_stream.read_chunk(sizeof(font_char)), sizeof(font_char));
+				}
 			break;
 			
 			//	kerning pairs block
 			case 5:
-		
+				//	meh, skip it
+				font_stream.seek(block_size, SP_CURRENT);
 			break;
 		}
-		
-		//	break if we reach the end of file
-		if (cursor >= array::get_item_count(&font_bytes))
+		//	break if we reach end of file
+		if (font_stream.eos())
 			break;
 	}
-	//	info block
-
-
 
 
 	//TODO BINARY BITMAP FONT READER
@@ -187,6 +207,8 @@ int main(int argc, char** argv) {
 		glfwSwapBuffers(window);
 	}	
 	//	clean up
+	array::destroy(&sprites);
+
 	sprite::destroy();
 	resource::destroy();
 	texture::destroy();

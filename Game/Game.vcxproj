@@ -75,22 +75,24 @@
   <ItemGroup>
     <ClCompile Include="array.cpp" />
     <ClCompile Include="file.cpp" />
+    <ClCompile Include="font.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="resource.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="stream.cpp" />
-    <ClCompile Include="stringmap.cpp" />
+    <ClCompile Include="map.cpp" />
     <ClCompile Include="texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="array.hpp" />
     <ClInclude Include="file.hpp" />
+    <ClInclude Include="font.hpp" />
     <ClInclude Include="resource.hpp" />
     <ClInclude Include="shader.hpp" />
     <ClInclude Include="sprite.hpp" />
     <ClInclude Include="stream.hpp" />
-    <ClInclude Include="stringmap.hpp" />
+    <ClInclude Include="map.hpp" />
     <ClInclude Include="texture.hpp" />
     <ClInclude Include="types.hpp" />
   </ItemGroup>
