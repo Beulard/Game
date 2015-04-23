@@ -27,6 +27,7 @@ class array {
 		void resize(u32 count);
 		//	returns the item at 'index' as void*
 		void* at(u32 index);
+		void* operator[](u32 index);
 
 		//	returns true if array was allocated
 		bool is_valid();

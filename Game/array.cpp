@@ -44,6 +44,10 @@ void* array::at(u32 index) {
 	return NULL;
 }
 
+void* array::operator[](u32 index) {
+	return at(index);
+}
+
 bool array::is_valid() {
 	return !data ? false : true;
 }

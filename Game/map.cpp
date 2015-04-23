@@ -14,20 +14,20 @@ namespace map {
 	}
 
 	void push(stringmap* map, const char* key, void* item) {
-		char* key_loc = (char*)map->keys.at(map->next_available);
-		void* data_loc = map->data.at(map->next_available++);
+		char* key_loc = (char*)map->keys[map->next_available];
+		void* data_loc = map->data[map->next_available++];
 		memcpy(key_loc, key, 16 * sizeof(char));
 		memcpy(data_loc, item, map->data_size);
 	}
 
 	void* at(stringmap* map, u32 index) {
-		return map->data.at(index);
+		return map->data[index];
 	}
 
 	void* at(stringmap* map, const char* key) {
 		for (u32 i = 0; i < map->count; ++i) {
-			if (!strcmp(key, (const char*)map->keys.at(i))) {
-				return map->data.at(i);
+			if (!strcmp(key, (const char*)map->keys[i])) {
+				return map->data[i];
 			}
 		}
 		return NULL;

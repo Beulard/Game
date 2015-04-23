@@ -27,7 +27,7 @@ namespace sprite {
 
 	int make_batch(u32 count, u32 texture, u32 shader) {
 		u32 id = next_available++;
-		spritebatch* batch = (spritebatch*)batches.at(id);
+		spritebatch* batch = (spritebatch*)batches[id];
 		batch->texture = texture;
 		batch->shader = shader;
 
@@ -47,7 +47,7 @@ namespace sprite {
 	void destroy() {
 		//	destroy every sprite from every batch
 		for (u32 i = 0; i < batches.get_item_count(); ++i) {
-			spritebatch* b = (spritebatch*)batches.at(i);
+			spritebatch* b = (spritebatch*)batches[i];
 			glDeleteBuffers(1, &b->vbo);
 			b->sprites.destroy();
 		}
@@ -97,14 +97,14 @@ namespace sprite {
 	}
 
 	void draw(sprite* s, u32 batch) {
-		spritebatch* b = (spritebatch*)batches.at(batch);
+		spritebatch* b = (spritebatch*)batches[batch];
 		//	simply copy the data from the sprite to the batch's array
-		sprite* dest = (sprite*)b->sprites.at(b->next_available++);
+		sprite* dest = (sprite*)b->sprites[b->next_available++];
 		memcpy(dest, s, sizeof(sprite));
 	}
 
 	void render_batch(u32 batch) {
-		spritebatch* b = (spritebatch*)batches.at(batch);
+		spritebatch* b = (spritebatch*)batches[batch];
 		//	use opengl to render each sprite from the batch
 		shader::use(b->shader);
 		texture::bind(b->texture);
@@ -112,7 +112,7 @@ namespace sprite {
 		//	normalize texture coordinates
 		vec2i tex_size = texture::get_size(b->texture);
 		for (u32 i = 0; i < b->sprites.get_item_count(); ++i) {
-			sprite* s = (sprite*)b->sprites.at(i);
+			sprite* s = (sprite*)b->sprites[i];
 			for (u32 j = 0; j < 4; ++j) {
 				(float)s->vertices[j].tex.x /= tex_size.x;
 				(float)s->vertices[j].tex.y /= tex_size.y;
@@ -125,7 +125,7 @@ namespace sprite {
 
 		//	upload the vertex coordinates data
 		glBindBuffer(GL_ARRAY_BUFFER, b->vbo);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(sprite) * b->sprites.get_item_count(), b->sprites.at(0), GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(sprite) * b->sprites.get_item_count(), b->sprites[0], GL_DYNAMIC_DRAW);
 
 		//	enable attributes
 		glEnableVertexAttribArray(b->attrib_coords);

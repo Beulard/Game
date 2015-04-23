@@ -47,7 +47,7 @@ namespace stream {
 	}
 
 	void* byte_instream::read_chunk(u32 nb) {
-		void* ret = data.at(cursor);
+		void* ret = data[cursor];
 		cursor += nb;
 		return ret;
 	}

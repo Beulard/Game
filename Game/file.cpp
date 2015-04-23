@@ -28,7 +28,7 @@ namespace file {
 		file_size = ftell(f);
 		array bytes = array::create(sizeof(u8), file_size);
 		fseek(f, 0, SEEK_SET);
-		fread((char*)bytes.at(0), sizeof(u8), file_size, f);
+		fread((char*)bytes[0], sizeof(u8), file_size, f);
 		return bytes;
 	}
 

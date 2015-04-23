@@ -13,7 +13,7 @@ namespace texture {
 
 	int make(u8* bytes, int x, int y, int bpp) {
 		u32 id = next_available++;
-		texture* tex = (texture*)textures.at(id);
+		texture* tex = (texture*)textures[id];
 		tex->size = { x, y };
 		glGenTextures(1, &tex->id);
 		glBindTexture(GL_TEXTURE_2D, tex->id);
@@ -25,15 +25,15 @@ namespace texture {
 	}
 
 	void destroy() {
-		glDeleteTextures(textures.get_item_count(), &((texture*)textures.at(0))->id);
+		glDeleteTextures(textures.get_item_count(), &((texture*)textures[0])->id);
 		textures.destroy();
 	}
 
 	void bind(u32 id) {
-		glBindTexture(GL_TEXTURE_2D, ((texture*)textures.at(id))->id);
+		glBindTexture(GL_TEXTURE_2D, ((texture*)textures[id])->id);
 	}
 
 	const vec2i& get_size(u32 id) {
-		return ((texture*)textures.at(id))->size;
+		return ((texture*)textures[id])->size;
 	}
 }
