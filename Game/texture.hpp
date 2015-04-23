@@ -1,5 +1,6 @@
 #pragma once
 #include "types.hpp"
+#include "GL/glew.h"
 
 namespace texture {
 

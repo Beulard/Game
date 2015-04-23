@@ -8,6 +8,7 @@
 #include "file.hpp"
 #include "map.hpp"
 #include "stream.hpp"
+#include "font.hpp"
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
@@ -49,117 +50,22 @@ int main(int argc, char** argv) {
 	resource::add_image_png("grass.png");
 	resource::add_shader("sprite.vs");
 	resource::add_shader("sprite.fs");
+	resource::add_font("calibri32.fnt", "calibri32_0.png");
+
 	resource::loading_start();
 
 	texture::init(resource::get_image_count());
 	shader::init(resource::get_shader_count());
-
-	stream::byte_instream font_stream("calibri32.fnt");
-	char b, m, f, version;
-	b = font_stream.read_u8();
-	m = font_stream.read_u8();
-	f = font_stream.read_u8();
-	version = font_stream.read_u8();
-	if (b == 'B' && m == 'M' && f == 'F' && version == 3)
-		printf("Correct format\n");
+	font::init(resource::get_font_count());
 
 	
-	struct font_info {
-		u16 fontSize;
-		u8 bitField;
-		u8 charSet;
-		u16 stretchH;
-		u8 aa;
-		u8 paddingUp;
-		u8 paddingRight;
-		u8 paddingDown;
-		u8 paddingLeft;
-		u8 paddingHoriz;
-		u8 paddingVert;
-		u8 outline;
-		char fontName[64];
-	};
-
-	struct font_common {
-		u16 lineHeight;
-		u16 base;
-		u16 scaleW;
-		u16 scaleH;
-		u16 pages;
-		u8 bitField;
-		u8 alphaChnl;
-		u8 redChnl;
-		u8 greenChnl;
-		u8 blueChnl;
-	};
-
-	struct font_char {
-		u32 id;
-		u16 x;
-		u16 y;
-		u16 width;
-		u16 height;
-		u16 xoffset;
-		u16 yoffset;
-		u16 xadvance;
-		u8 page;
-		u8 chnl;
-	};
-
-
-	font_info info = { 0 };
-	font_common common = { 0 };
-	u32 nbChars = 0;
-	array chars;
-	while (1) {
-		u8 block_type = font_stream.read_u8();
-		u32 block_size = font_stream.read_u32();
-		if (block_type > 5) {
-			printf("Error reading BMF font description file");
-			break;
-		}
-
-		switch (block_type) {
-			//	info block
-			case 1:
-				memcpy(&info, font_stream.read_chunk(block_size), block_size);
-			break;
-		
-			//	common block
-			case 2:
-				memcpy(&common, font_stream.read_chunk(block_size), block_size);
-			break;
-		
-			//	pages block
-			case 3:
-				//	nothing really interesting here let's just skip it
-				font_stream.seek(block_size, SP_CURRENT);
-			break;
-
-			//	chars block
-			case 4:
-				nbChars = block_size / sizeof(font_char);
-				chars = array::create(sizeof(font_char), nbChars);
-				for (u32 i = 0; i < nbChars; ++i) {
-					font_char* c = (font_char*)chars[i];
-					memcpy(c, font_stream.read_chunk(sizeof(font_char)), sizeof(font_char));
-				}
-			break;
-			
-			//	kerning pairs block
-			case 5:
-				//	meh, skip it
-				font_stream.seek(block_size, SP_CURRENT);
-			break;
-		}
-		//	break if we reach end of file
-		if (font_stream.eos())
-			break;
-	}
-
-
-	//TODO PUT ALL THAT SH*T IN FONT AND LOOK HOW TO MERGE
+	resource::image_data* font_calibri_img = resource::get_image("calibri32_0.png");
+	u32 font_calibri_tex = texture::make(font_calibri_img->bytes, font_calibri_img->x, font_calibri_img->y, font_calibri_img->bpp);
+	resource::fontdesc_data* font_calibri_desc = resource::get_fontdesc("calibri32.fnt");
 	
+	u32 font_calibri = font::make(font_calibri_desc->bytes, font_calibri_tex);
+	
+	font::get_char(font_calibri, 'b');
 
 	resource::image_data* grass = resource::get_image("grass.png");
 	auto grass_tex = texture::make(grass->bytes, grass->x, grass->y, grass->bpp);

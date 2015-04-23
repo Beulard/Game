@@ -10,12 +10,14 @@
 namespace resource {
 	
 	//	contain the names of resources to be loaded
-	static std::vector<std::string> image_files;
-	static std::vector<std::string> shader_files;
+	std::vector<std::string> image_files;
+	std::vector<std::string> shader_files;
+	std::vector<std::string> fontdesc_files;
 
 	//	contain the loaded data in string indexed maps
-	static map::stringmap image_data_map;
-	static map::stringmap shader_data_map;
+	map::stringmap image_data_map;
+	map::stringmap shader_data_map;
+	map::stringmap fontdesc_data_map;
 
 
 	void add_image_png(const char* filename) {
@@ -26,8 +28,12 @@ namespace resource {
 		shader_files.push_back(filename);
 	}
 
-	void load_images() {
+	void add_font(const char* fontdesc, const char* fontimage) {
+		image_files.push_back(fontimage);
+		fontdesc_files.push_back(fontdesc);
+	}
 
+	void load_images() {
 		for (u32 i = 0; i < image_files.size(); ++i){
 			//	for each image file added, insert a new entry in the 'image_data_map' and populate the image_data structure
 			int x, y, n;
@@ -54,13 +60,22 @@ namespace resource {
 		}
 	}
 
+	void load_fontdesc() {
+		for (u32 i = 0; i < fontdesc_files.size(); ++i) {
+			fontdesc_data data = { file::read_binary(fontdesc_files[i].c_str()) };
+			map::push(&fontdesc_data_map, fontdesc_files[i].c_str(), &data);
+		}
+	}
+
 	void loading_start() {
 		//	initialize maps
 		image_data_map = map::create(sizeof(image_data), image_files.size());
 		shader_data_map = map::create(sizeof(shader_data), shader_files.size());
+		fontdesc_data_map = map::create(sizeof(fontdesc_data), fontdesc_files.size());
 		//	do the actual loading
 		load_images();
 		load_shaders();
+		load_fontdesc();
 	}
 
 	image_data* get_image(const std::string& name) {
@@ -71,12 +86,20 @@ namespace resource {
 		return (shader_data*)map::at(&shader_data_map, name.c_str());
 	}
 
+	fontdesc_data* get_fontdesc(const std::string& name) {
+		return (fontdesc_data*)map::at(&fontdesc_data_map, name.c_str());
+	}
+
 	u32 get_image_count() {
 		return image_files.size();
 	}
 
 	u32 get_shader_count() {
 		return shader_files.size();
+	}
+
+	u32 get_font_count() {
+		return fontdesc_files.size();
 	}
 
 	void destroy() {

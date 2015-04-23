@@ -9,3 +9,7 @@ struct vec2i {
 	int x;
 	int y;
 };
+
+struct color {
+	u8 r, g, b, a;
+};

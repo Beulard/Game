@@ -15,10 +15,6 @@ namespace sprite {
 		int left, top, right, bottom;
 	};
 
-	struct color {
-		u8 r, g, b, a;
-	};
-
 	//	RGBA color clamped to the [0.f; 1.f] range
 	struct color_normalized {
 		float r, g, b, a;
