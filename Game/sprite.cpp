@@ -22,7 +22,7 @@ namespace sprite {
 		//	make the active texture GL_TEXTURE0 if it wasn't already
 		glActiveTexture(GL_TEXTURE0);
 		//	initialize the batches array
-		batches = array::create(sizeof(spritebatch), count);
+		batches = array::array::create(sizeof(spritebatch), count);
 	}
 
 	int make_batch(u32 count, u32 texture, u32 shader) {
