@@ -85,11 +85,11 @@ namespace font {
 		return id;
 	}
 
-	sprite::sprite render_char(u32 id, char c, int x, int y, color col, color outline) {
+	text::character render_char(u32 id, char c, int x, int y, color col, color outline) {
 		font_char* fc = get_char(id, c);
-		sprite::sprite s = sprite::makechar(x, y, fc->width, fc->height, 
-		{ fc->x, fc->y, fc->x + fc->width, fc->y + fc->height }, );
-		return s;
+		text::character tc = text::make(x, y, fc->width, fc->height, 
+		{ fc->x, fc->y, fc->x + fc->width, fc->y + fc->height }, col, outline);
+		return tc;
 	}
 
 	font_char* get_char(u32 id, char c) {

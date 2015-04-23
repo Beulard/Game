@@ -82,17 +82,20 @@
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="stream.cpp" />
     <ClCompile Include="map.cpp" />
+    <ClCompile Include="text.cpp" />
     <ClCompile Include="texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="array.hpp" />
     <ClInclude Include="file.hpp" />
     <ClInclude Include="font.hpp" />
+    <ClInclude Include="graphics_types.hpp" />
     <ClInclude Include="resource.hpp" />
     <ClInclude Include="shader.hpp" />
     <ClInclude Include="sprite.hpp" />
     <ClInclude Include="stream.hpp" />
     <ClInclude Include="map.hpp" />
+    <ClInclude Include="text.hpp" />
     <ClInclude Include="texture.hpp" />
     <ClInclude Include="types.hpp" />
   </ItemGroup>
