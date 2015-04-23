@@ -9,9 +9,10 @@ namespace array {
 	//	Bytes 0-3 : item size (unsigned int)
 	//	Bytes 4-7 : item count (unsigned int)
 	//	Bytes after 8 : data
-	struct array {
-		void* data;
-	};
+	
+	//struct array {
+	//	void* data;
+	//};
 
 	enum {
 		ITEM_SIZE_POS = 0,
@@ -20,6 +21,33 @@ namespace array {
 		DATA_POS = 8
 	};
 
+
+	class array {
+		public:
+			static array create(u32 item_size, u32 item_count);
+			//	free memory allocated for this array
+			void destroy();
+			//	resize the array
+			void resize(u32 count);
+			//	returns the item at 'index' as void*
+			void* at(u32 index);
+
+			//	returns number of items
+			const u32 get_item_count() const;
+			//	returns item sizes
+			const u32 get_item_size() const;
+			//	zero every item in the array
+			void zero_all();
+
+		private:
+			void* data;
+
+			void set_item_size(u32 size);
+			void set_item_count(u32 count);
+	};
+
+	
+	/*
 	array create(u32 itemSize, u32 count);
 	void destroy(array* a);
 	void resize(array* a, u32 count);
@@ -27,5 +55,5 @@ namespace array {
 	const u32 get_item_count(array* a);
 	const u32 get_item_size(array* a);
 	void zero_all(array* a);
-
+	*/
 }

@@ -114,9 +114,11 @@ int main(int argc, char** argv) {
 	while (1) {
 		u8 block_type = font_stream.read_u8();
 		u32 block_size = font_stream.read_u32();
-		if (block_type > 5)
+		if (block_type > 5) {
 			printf("Error reading BMF font description file");
 			break;
+		}
+
 		switch (block_type) {
 			//	info block
 			case 1:
