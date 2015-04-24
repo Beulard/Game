@@ -46,13 +46,15 @@ bool Init(u32 width, u32 height) {
 int main(int argc, char** argv) {
 	u32 width = 800, height = 600;
 
+	//	TODO wtf
 	Init(width, height);
 
-	//	TODO HOW TO GL BLEND ALPHA
 	//	TODO RENDER MULTIPLE CHARS, NEWLINES ETC
-	//glAlphaFunc(GL_BLEND_DST_ALPHA, 1.f);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	resource::add_image_png("grass2.png");
+	resource::add_image_png("tex.png");
 	resource::add_shader("sprite.vs");
 	resource::add_shader("sprite.fs");
 	resource::add_shader("text.vs");
@@ -90,30 +92,11 @@ int main(int argc, char** argv) {
 
 	text::init(1);
 	text::set_projection(projection);
-	text::character calA = font::render_char(font_calibri, 'x', 100, 100, 2.f, { 255, 0, 0, 255 }, { 255, 255, 255, 255 });
+	text::character calA = text::make_char(font_calibri, 'b', 100, 100, 1.f, { 255, 255, 255, 255 }, { 0, 0, 0, 255 });
 	int text_batch = text::make_batch(12, font_calibri_tex, shader_text);
 	
 	resource::image_data* grass = resource::get_image("grass2.png");
 	auto grass_tex = texture::make(grass->bytes, grass->x, grass->y, grass->bpp);
-
-	//	unit test hashmap 'not found' and array 'out of bounds'
-	array a = array::create(sizeof(int), 10);
-	*(int*)a[9] = 5;
-	hashmap m = hashmap::create(sizeof(int), 10);
-	*(int*)m[9] = 10;
-	int x = 42;
-	m.push("cheval", &x);
-
-	printf("qweqew");
-	
-	int i = *(int*)a[9];
-	int j = *(int*)m[9];
-	printf("%d %d\n", i, j);
-	int* k = (int*)a[10];
-	int* l = (int*)m["cheval"];
-	int* qwe = (int*)m["poulet"];
-	printf("0x%d 0x%d", &a, &m);
-	printf("%d %d %d\n", k, l, qwe);
 
 
 	glfwSetKeyCallback(window, key_callback);
@@ -128,14 +111,13 @@ int main(int argc, char** argv) {
 	for (u32 j = 0; j < 60; ++j) {
 		for (u32 i = 0; i < 80; ++i) {
 			sprite::sprite* s = (sprite::sprite*)sprites[j * 80 + i];
-			*s = sprite::make(i * 10, j * 10, 10, 10, { 32, 0, 64, 32 }, { 0, 255, 255, 0 });
+			*s = sprite::make(i * 10, j * 10, 10, 10, { 32, 0, 64, 32 }, { 0, 0, 255, 0 });
 		}
 	}
-
-	auto s1 = sprite::make(200, 200, 200, 200, { 0, 0, 32, 32 }, { 255, 0, 0, 255 });
+	auto s1 = sprite::make(200, 200, 200, 200, { 0, 0, 32, 32 }, { 100, 100, 50, 150 });
 
 	while (!glfwWindowShouldClose(window)) {
-		glClearColor(.2f, .2f, .2f, 0.f);
+		glClearColor(0.f, 0.f, 0.f, 0.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		glfwPollEvents();
 

@@ -25,11 +25,11 @@ namespace font {
 		M = font_stream.read_u8();
 		F = font_stream.read_u8();
 		version = font_stream.read_u8();
-		if (B == 'B' && M == 'M' && F == 'F' && version == 3)
-			printf("Correct format\n");
-		else
+		if (!(B == 'B' && M == 'M' && F == 'F' && version == 3)) {
+			printf("Font description file doesn't have correct format");
 			return -1;
-
+		}
+			
 		u32 id = next_available++;
 
 		font* f = (font*)fonts[id];
@@ -37,6 +37,7 @@ namespace font {
 		f->common = { 0 };
 		u32 nbChars = 0;
 
+		//	read all blocks one by one and put data in structs
 		while (1) {
 			u8 block_type = font_stream.read_u8();
 			u32 block_size = font_stream.read_u32();
@@ -85,9 +86,10 @@ namespace font {
 		return id;
 	}
 
+	//	TODO REMOVE
 	text::character render_char(u32 id, char c, int x, int y, float scale, color col, color outline) {
 		font_char* fc = get_char(id, c);
-		text::character tc = text::make(x, y, fc->width * scale, fc->height * scale, 
+		text::character tc = text::make(x, y, (int)(fc->width * scale), (int)(fc->height * scale), 
 		{ fc->x, fc->y, fc->x + fc->width, fc->y + fc->height }, col, outline);
 		return tc;
 	}

@@ -2,6 +2,7 @@
 #include "GL/glew.h"
 #include "shader.hpp"
 #include "texture.hpp"
+#include "font.hpp"
 #include <cstring>
 
 namespace text {
@@ -55,6 +56,21 @@ namespace text {
 
 		//	destroy every batch
 		batches.destroy();
+	}
+
+	character make_char(char c, u32 font, int x, int y, float scale, color col, color outline_col) {
+		font::font_char* fc = font::get_char(font, c);
+		character tc = make(x, y, (int)(fc->width * scale), (int)(fc->height * scale), 
+		{ fc->x, fc->y, fc->x + fc->width, fc->y + fc->height }, col, outline_col);
+	}
+
+	string make_string(const char* strtxt, u32 font, int x, int y, float scale, color col, color outline_col) {
+		u32 len = strlen(strtxt);
+		string s = { array::create(sizeof(character), len - 1) };
+		for (u32 i = 0; i < len - 1; ++i) {
+
+		}
+		
 	}
 
 	character make(int x, int y, int width, int height, rect subrect, color col, color outlinecol) {

@@ -3,6 +3,9 @@
 #include "GL/glew.h"
 #include "array.hpp"
 
+//	text is the equivalent to sprites, but for screen text
+//	it allows to draw individual characters to the screen given
+//	font information.
 namespace text {
 
 	//	data used by the shader to render a vertex
@@ -54,7 +57,9 @@ namespace text {
 	void destroy();
 
 	//	creates a character with provided parameters
-	character make(int x = 0, int y = 0, int width = 0, int height = 0, rect subrect = { 0, 0, 0, 0 }, color col = { 0, 0, 0, 0 }, color outlinecol = { 0, 0, 0, 0 });
+	//character make(int x = 0, int y = 0, int width = 0, int height = 0, rect subrect = { 0, 0, 0, 0 }, color col = { 0, 0, 0, 0 }, color outlinecol = { 0, 0, 0, 0 });
+	character make_char(char c, u32 font, int x, int y, float scale, color col, color outline_col = { 0, 0, 0, 0 });
+	string make_string(const char* string, u32 font, int x, int y, float scale, color col, color outline_col = { 0, 0, 0, 0 });
 
 	//	set a specific character to be drawn in the next call to render_batch
 	void draw(character* c, u32 batch);

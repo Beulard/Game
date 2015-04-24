@@ -39,7 +39,7 @@ void array::resize(u32 count) {
 void* array::at(u32 index) {
 	if(index < get_item_count() && data)
 		return ((u8*)data + HEADER_SIZE + index * get_item_size());
-	printf("Trying to access array '0x%d' at index '%d' : out of bounds\n", this, index);
+	printf("Trying to access array '0x%p' at index '%p' : out of bounds\n", this, index);
 	return NULL;
 }
 
