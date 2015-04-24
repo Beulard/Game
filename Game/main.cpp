@@ -9,6 +9,7 @@
 #include "map.hpp"
 #include "stream.hpp"
 #include "font.hpp"
+#include "hash.hpp"
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
@@ -95,7 +96,15 @@ int main(int argc, char** argv) {
 	resource::image_data* grass = resource::get_image("grass2.png");
 	auto grass_tex = texture::make(grass->bytes, grass->x, grass->y, grass->bpp);
 
+	const char *dog = "qweqwe",
+		*chien = "poulet",
+		*caca = "LE CACA",
+		*wesh = "wesh wesh la cite";
 
+	hash::hash(dog);
+	hash::hash(chien);
+	hash::hash(caca);
+	hash::hash(wesh);
 
 	glfwSetKeyCallback(window, key_callback);
 

@@ -15,9 +15,9 @@ namespace resource {
 	std::vector<std::string> fontdesc_files;
 
 	//	contain the loaded data in string indexed maps
-	map::stringmap image_data_map;
-	map::stringmap shader_data_map;
-	map::stringmap fontdesc_data_map;
+	stringmap image_data_map;
+	stringmap shader_data_map;
+	stringmap fontdesc_data_map;
 
 
 	void add_image_png(const char* filename) {
@@ -39,7 +39,7 @@ namespace resource {
 			int x, y, n;
 			u8* img_bytes = stbi_load(image_files[i].c_str(), &x, &y, &n, 4);
 			image_data data = { img_bytes, x, y, n };
-			map::push(&image_data_map, image_files[i].c_str(), &data);
+			image_data_map.push(image_files[i].c_str(), &data);
 		}
 	}
 
@@ -56,22 +56,22 @@ namespace resource {
 			shader_data data;
 			data.type = st;
 			strcpy_s(data.code, 1024, code.c_str());
-			map::push(&shader_data_map, shader_files[i].c_str(), &data);
+			shader_data_map.push(shader_files[i].c_str(), &data);
 		}
 	}
 
 	void load_fontdesc() {
 		for (u32 i = 0; i < fontdesc_files.size(); ++i) {
 			fontdesc_data data = { file::read_binary(fontdesc_files[i].c_str()) };
-			map::push(&fontdesc_data_map, fontdesc_files[i].c_str(), &data);
+			fontdesc_data_map.push(fontdesc_files[i].c_str(), &data);
 		}
 	}
 
 	void loading_start() {
 		//	initialize maps
-		image_data_map = map::create(sizeof(image_data), image_files.size());
-		shader_data_map = map::create(sizeof(shader_data), shader_files.size());
-		fontdesc_data_map = map::create(sizeof(fontdesc_data), fontdesc_files.size());
+		image_data_map = stringmap::create(sizeof(image_data), image_files.size());
+		shader_data_map = stringmap::create(sizeof(shader_data), shader_files.size());
+		fontdesc_data_map = stringmap::create(sizeof(fontdesc_data), fontdesc_files.size());
 		//	do the actual loading
 		load_images();
 		load_shaders();
@@ -79,15 +79,15 @@ namespace resource {
 	}
 
 	image_data* get_image(const std::string& name) {
-		return (image_data*)map::at(&image_data_map, name.c_str());
+		return (image_data*)image_data_map[name.c_str()];
 	}
 
 	shader_data* get_shader(const std::string& name) {
-		return (shader_data*)map::at(&shader_data_map, name.c_str());
+		return (shader_data*)shader_data_map[name.c_str()];
 	}
 
 	fontdesc_data* get_fontdesc(const std::string& name) {
-		return (fontdesc_data*)map::at(&fontdesc_data_map, name.c_str());
+		return (fontdesc_data*)fontdesc_data_map[name.c_str()];
 	}
 
 	u32 get_image_count() {
@@ -104,8 +104,8 @@ namespace resource {
 
 	void destroy() {
 		//	free every image loaded by stb
-		for (u32 i = 0; i < image_data_map.count; ++i) {
-			stbi_image_free(((image_data*)map::at(&image_data_map, i))->bytes);
+		for (u32 i = 0; i < image_data_map.get_count(); ++i) {
+			stbi_image_free(((image_data*)image_data_map[i])->bytes);
 		}
 	}
 

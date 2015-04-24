@@ -76,6 +76,7 @@
     <ClCompile Include="array.cpp" />
     <ClCompile Include="file.cpp" />
     <ClCompile Include="font.cpp" />
+    <ClCompile Include="hash.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="resource.cpp" />
     <ClCompile Include="shader.cpp" />
@@ -90,6 +91,7 @@
     <ClInclude Include="file.hpp" />
     <ClInclude Include="font.hpp" />
     <ClInclude Include="graphics_types.hpp" />
+    <ClInclude Include="hash.hpp" />
     <ClInclude Include="resource.hpp" />
     <ClInclude Include="shader.hpp" />
     <ClInclude Include="sprite.hpp" />
