@@ -85,9 +85,9 @@ namespace font {
 		return id;
 	}
 
-	text::character render_char(u32 id, char c, int x, int y, color col, color outline) {
+	text::character render_char(u32 id, char c, int x, int y, float scale, color col, color outline) {
 		font_char* fc = get_char(id, c);
-		text::character tc = text::make(x, y, fc->width, fc->height, 
+		text::character tc = text::make(x, y, fc->width * scale, fc->height * scale, 
 		{ fc->x, fc->y, fc->x + fc->width, fc->y + fc->height }, col, outline);
 		return tc;
 	}

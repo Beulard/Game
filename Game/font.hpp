@@ -69,7 +69,7 @@ namespace font {
 	//	returns font_char data of a character
 	font_char* get_char(u32 id, char c);
 	//	returns a sprite with the requested character on it
-	text::character render_char(u32 id, char c, int x, int y, color col, color outline = { 0, 0, 0, 0 });
+	text::character render_char(u32 id, char c, int x, int y, float scale, color col, color outline = { 0, 0, 0, 0 });
 	//	returns width of the 'space' character
 	int get_space_width(u32 font);
 

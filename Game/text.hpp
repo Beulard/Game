@@ -18,6 +18,11 @@ namespace text {
 		vertex_data vertices[4];
 	};
 
+	//	simple array of characters
+	struct string {
+		array chars;
+	};
+
 	//	a textbatch contains a contiguous array of character data, as well as handles to a texture and a shader
 	//	it also holds locations of attributes and uniforms for the shader
 	//	it is used for optimized drawing of text by opengl

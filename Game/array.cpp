@@ -40,7 +40,7 @@ void* array::at(u32 index) {
 	if(index < get_item_count() && data)
 		return ((u8*)data + HEADER_SIZE + index * get_item_size());
 	else
-		printf("out of bounds !\n");
+		printf("Trying to access array '%d' at index '%d' : out of bounds\n", this, index);
 	return NULL;
 }
 

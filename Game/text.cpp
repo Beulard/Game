@@ -137,16 +137,19 @@ namespace text {
 		glEnableVertexAttribArray(b->attrib_coords);
 		glEnableVertexAttribArray(b->attrib_texcoords);
 		glEnableVertexAttribArray(b->attrib_color);
+		glEnableVertexAttribArray(b->attrib_outline_color);
 
 		//	specify attributes location
 		glVertexAttribPointer(b->attrib_coords, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_data), 0);
 		glVertexAttribPointer(b->attrib_texcoords, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_data), (void*)sizeof(vertex));
 		glVertexAttribPointer(b->attrib_color, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_data), (void*)(sizeof(vertex) * 2));
+		glVertexAttribPointer(b->attrib_outline_color, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_data), (void*)(sizeof(vertex) * 2 + sizeof(color_normalized)));
 
 		//	draw
 		glDrawArrays(GL_QUADS, 0, 4 * b->characters.get_item_count());
 
 		//	disable attribs
+		glDisableVertexAttribArray(b->attrib_outline_color);
 		glDisableVertexAttribArray(b->attrib_color);
 		glDisableVertexAttribArray(b->attrib_texcoords);
 		glDisableVertexAttribArray(b->attrib_coords);

@@ -1,5 +1,6 @@
 #include "map.hpp"
 #include <cstring>
+#include <cstdio>
 
 namespace map {
 	
@@ -30,6 +31,7 @@ namespace map {
 				return map->data[i];
 			}
 		}
+		printf("Item '%s' not found", key);
 		return NULL;
 	}
 

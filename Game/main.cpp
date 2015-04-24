@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
 	resource::add_shader("sprite.fs");
 	resource::add_shader("text.vs");
 	resource::add_shader("text.fs");
-	resource::add_font("calibri32.fnt", "calibri32_0.png");
+	resource::add_font("calibri92.fnt", "calibri92_0.png");
 
 	resource::loading_start();
 
@@ -70,9 +70,9 @@ int main(int argc, char** argv) {
 
 	auto shader_sprite = shader::make(sprite_vertex->code, sprite_fragment->code);
 	
-	resource::image_data* font_calibri_img = resource::get_image("calibri32_0.png");
+	resource::image_data* font_calibri_img = resource::get_image("calibri92_0.png");
 	u32 font_calibri_tex = texture::make(font_calibri_img->bytes, font_calibri_img->x, font_calibri_img->y, font_calibri_img->bpp);
-	resource::fontdesc_data* font_calibri_desc = resource::get_fontdesc("calibri32.fnt");
+	resource::fontdesc_data* font_calibri_desc = resource::get_fontdesc("calibri92.fnt");
 	
 	resource::shader_data* text_vertex = resource::get_shader("text.vs");
 	resource::shader_data* text_fragment = resource::get_shader("text.fs");
@@ -89,7 +89,7 @@ int main(int argc, char** argv) {
 
 	text::init(1);
 	text::set_projection(projection);
-	text::character calA = font::render_char(font_calibri, 'A', 100, 100, { 255, 0, 255, 255 });
+	text::character calA = font::render_char(font_calibri, 'x', 100, 100, 2.f, { 255, 0, 0, 255 }, { 255, 255, 255, 255 });
 	int text_batch = text::make_batch(12, font_calibri_tex, shader_text);
 	
 	resource::image_data* grass = resource::get_image("grass2.png");
