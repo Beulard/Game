@@ -11,7 +11,7 @@ namespace file {
 			s << in.rdbuf();
 		}
 		else
-			printf("Couldn't open file '%s' !", filename);
+			printf("Couldn't open file '%s'\n", filename);
 		in.close();
 		return s.str();
 	}
@@ -20,7 +20,7 @@ namespace file {
 		long file_size = 0;
 		FILE* f = NULL;
 		if (fopen_s(&f, filename, "rb") != 0) {
-			printf("Error reading file '%s'", filename);
+			printf("Error reading file '%s'\n", filename);
 			//	return array with NULL data
 			return array();
 		}

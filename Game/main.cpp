@@ -96,10 +96,10 @@ int main(int argc, char** argv) {
 
 	text::init(1);
 	text::set_projection(projection);
-	text::character calA = text::make_char('b', font_calibri, 100, 100, 1.f, { 255, 255, 255, 255 }, { 0, 0, 0, 255 });
-	int text_batch = text::make_batch(13, font_calibri_tex, shader_text);
+	text::character calA = text::make_char(' ', font_calibri, 100, 100, 1.f, { 255, 255, 255, 255 }, { 0, 0, 0, 255 });
+	int text_batch = text::make_batch(128, font_calibri_tex, shader_text);
 
-	text::string hello_world = text::make_string("hello world!", font_calibri, 10, 10, 1.f, black, { 0, 0, 0, 0 });
+	text::string hello_world = text::make_string("And so it is that the knight\nwas defeated by the\nforces of evil...", font_calibri, 10, 1, 1.f, white, black);
 
 
 	resource::image_data* grass = resource::get_image("grass2.png");

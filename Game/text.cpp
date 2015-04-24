@@ -4,6 +4,8 @@
 #include "texture.hpp"
 #include "font.hpp"
 #include <cstring>
+//todo remove
+#include <cstdio>
 
 namespace text {
 
@@ -119,13 +121,21 @@ namespace text {
 		u32 len = strlen(strtxt);
 		string s = { array::create(sizeof(character), len) };
 		font::font_common* common = font::get_common(font);
+		const int paragraph_x = x;
 		int cursor = x;
 		for (u32 i = 0; i < len; ++i) {
-			font::font_char* fc = font::get_char(font, strtxt[i]);
-			character* c = (character*)s.chars[i];
-			int ypos = y + common->base - (int)(fc->height * scale);
-			*c = make_char(fc, cursor, ypos, scale, col, outline_col);
-			cursor += (int)(scale * fc->xadvance);
+			if (strtxt[i] == '\n') {
+				cursor = paragraph_x;
+				y += common->lineHeight;
+			} 
+			else {
+				font::font_char* fc = font::get_char(font, strtxt[i]);
+				character* c = (character*)s.chars[i];
+				int ypos = y + (int)(scale * (common->base - fc->height));
+				*c = make_char(fc, cursor + (__int16)fc->xoffset, y + fc->yoffset * scale - common->base * scale / 3.f, scale, col, outline_col);
+				printf("%d\n", (short)fc->yoffset);
+				cursor += (int)(scale * fc->xadvance);
+			}
 		}
 		return s;
 	}
