@@ -96,15 +96,23 @@ int main(int argc, char** argv) {
 	resource::image_data* grass = resource::get_image("grass2.png");
 	auto grass_tex = texture::make(grass->bytes, grass->x, grass->y, grass->bpp);
 
-	const char *dog = "qweqwe",
-		*chien = "poulet",
-		*caca = "LE CACA",
-		*wesh = "wesh wesh la cite";
+	//	unit test hashmap 'not found' and array 'out of bounds'
+	array a = array::create(sizeof(int), 10);
+	*(int*)a[9] = 5;
+	hashmap m = hashmap::create(sizeof(int), 10);
+	*(int*)m[9] = 10;
+	int x = 42;
+	m.push("cheval", &x);
+	
+	int i = *(int*)a[9];
+	int j = *(int*)m[9];
+	printf("%d %d\n", i, j);
+	int* k = (int*)a[10];
+	int* l = (int*)m["cheval"];
+	int* qwe = (int*)m["poulet"];
+	printf("0x%d 0x%d", &a, &m);
+	printf("%d %d %d\n", k, l, qwe);
 
-	hash::hash(dog);
-	hash::hash(chien);
-	hash::hash(caca);
-	hash::hash(wesh);
 
 	glfwSetKeyCallback(window, key_callback);
 
