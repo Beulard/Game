@@ -103,6 +103,8 @@ int main(int argc, char** argv) {
 	*(int*)m[9] = 10;
 	int x = 42;
 	m.push("cheval", &x);
+
+	printf("qweqew");
 	
 	int i = *(int*)a[9];
 	int j = *(int*)m[9];
