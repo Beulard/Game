@@ -64,7 +64,10 @@ namespace font {
 	//	create a font from its binary description and texture
 	int make(array fontdesc, u32 tex);
 
-
+	//	returns info about the font
+	font_info* get_info(u32 id);
+	//	returns common stuff about the font
+	font_common* get_common(u32 id);
 	//	returns font_char data of a character
 	font_char* get_char(u32 id, char c);
 	//	returns a sprite with the requested character on it

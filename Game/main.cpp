@@ -10,6 +10,7 @@
 #include "stream.hpp"
 #include "font.hpp"
 #include "hash.hpp"
+#include "text.hpp"
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
@@ -72,17 +73,17 @@ int main(int argc, char** argv) {
 	resource::shader_data* sprite_fragment = resource::get_shader("sprite.fs");
 
 	auto shader_sprite = shader::make(sprite_vertex->code, sprite_fragment->code);
-	
+
 	resource::image_data* font_calibri_img = resource::get_image("calibri92_0.png");
 	u32 font_calibri_tex = texture::make(font_calibri_img->bytes, font_calibri_img->x, font_calibri_img->y, font_calibri_img->bpp);
 	resource::fontdesc_data* font_calibri_desc = resource::get_fontdesc("calibri92.fnt");
-	
+
 	resource::shader_data* text_vertex = resource::get_shader("text.vs");
 	resource::shader_data* text_fragment = resource::get_shader("text.fs");
 	auto shader_text = shader::make(text_vertex->code, text_fragment->code);
 
 	u32 font_calibri = font::make(font_calibri_desc->bytes, font_calibri_tex);
-	
+
 	float projection[] = {
 		2 / (float)width, 0, 0, 0,
 		0, -2 / (float)height, 0, 0,
@@ -90,11 +91,17 @@ int main(int argc, char** argv) {
 		-1, 1, 1, 1
 	};
 
+	color black = { 0, 0, 0, 255 };
+	color white = { 255, 255, 255, 255 };
+
 	text::init(1);
 	text::set_projection(projection);
-	text::character calA = text::make_char(font_calibri, 'b', 100, 100, 1.f, { 255, 255, 255, 255 }, { 0, 0, 0, 255 });
-	int text_batch = text::make_batch(12, font_calibri_tex, shader_text);
-	
+	text::character calA = text::make_char('b', font_calibri, 100, 100, 1.f, { 255, 255, 255, 255 }, { 0, 0, 0, 255 });
+	int text_batch = text::make_batch(13, font_calibri_tex, shader_text);
+
+	text::string hello_world = text::make_string("hello world!", font_calibri, 10, 10, 1.f, black, { 0, 0, 0, 0 });
+
+
 	resource::image_data* grass = resource::get_image("grass2.png");
 	auto grass_tex = texture::make(grass->bytes, grass->x, grass->y, grass->bpp);
 
@@ -128,6 +135,7 @@ int main(int argc, char** argv) {
 		sprite::render_batch(batch1);
 
 		text::draw(&calA, text_batch);
+		text::draw_string(&hello_world, text_batch);
 		text::render_batch(text_batch);
 
 		glfwSwapBuffers(window);

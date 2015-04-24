@@ -63,6 +63,8 @@ namespace text {
 
 	//	set a specific character to be drawn in the next call to render_batch
 	void draw(character* c, u32 batch);
+	//	draw a string to the screen on next call to render_batch
+	void draw_string(string* s, u32 batch);
 
 	//	render the batch
 	void render_batch(u32 batch);

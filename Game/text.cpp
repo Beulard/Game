@@ -58,21 +58,7 @@ namespace text {
 		batches.destroy();
 	}
 
-	character make_char(char c, u32 font, int x, int y, float scale, color col, color outline_col) {
-		font::font_char* fc = font::get_char(font, c);
-		character tc = make(x, y, (int)(fc->width * scale), (int)(fc->height * scale), 
-		{ fc->x, fc->y, fc->x + fc->width, fc->y + fc->height }, col, outline_col);
-	}
-
-	string make_string(const char* strtxt, u32 font, int x, int y, float scale, color col, color outline_col) {
-		u32 len = strlen(strtxt);
-		string s = { array::create(sizeof(character), len - 1) };
-		for (u32 i = 0; i < len - 1; ++i) {
-
-		}
-		
-	}
-
+	//	helper function to put the right data in the right place when rendering a character from font data
 	character make(int x, int y, int width, int height, rect subrect, color col, color outlinecol) {
 #define f(x) (float)x
 
@@ -118,11 +104,42 @@ namespace text {
 #undef f
 	}
 
+	character make_char(font::font_char* fc, int x, int y, float scale, color col, color outline_col) {
+		character tc = make(x, y, (int)(fc->width * scale), (int)(fc->height * scale),
+		{ fc->x, fc->y, fc->x + fc->width, fc->y + fc->height }, col, outline_col);
+		return tc;
+	}
+
+	character make_char(char c, u32 font, int x, int y, float scale, color col, color outline_col) {
+		font::font_char* fc = font::get_char(font, c);
+		return make_char(fc, x, y, scale, col, outline_col);
+	}
+
+	string make_string(const char* strtxt, u32 font, int x, int y, float scale, color col, color outline_col) {
+		u32 len = strlen(strtxt);
+		string s = { array::create(sizeof(character), len) };
+		font::font_common* common = font::get_common(font);
+		int cursor = x;
+		for (u32 i = 0; i < len; ++i) {
+			font::font_char* fc = font::get_char(font, strtxt[i]);
+			character* c = (character*)s.chars[i];
+			int ypos = y + common->base - (int)(fc->height * scale);
+			*c = make_char(fc, cursor, ypos, scale, col, outline_col);
+			cursor += (int)(scale * fc->xadvance);
+		}
+		return s;
+	}
+
 	void draw(character* c, u32 batch) {
 		textbatch* b = (textbatch*)batches[batch];
 		//	simply copy the data from the sprite to the batch's array
 		character* dest = (character*)b->characters[b->next_available++];
 		memcpy(dest, c, sizeof(character));
+	}
+
+	void draw_string(string* s, u32 batch) {
+		for (u32 i = 0; i < s->chars.get_item_count(); ++i)
+			draw((character*)s->chars[i], batch);
 	}
 
 	void render_batch(u32 batch) {

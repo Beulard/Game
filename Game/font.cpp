@@ -87,11 +87,19 @@ namespace font {
 	}
 
 	//	TODO REMOVE
-	text::character render_char(u32 id, char c, int x, int y, float scale, color col, color outline) {
+	/*text::character render_char(u32 id, char c, int x, int y, float scale, color col, color outline) {
 		font_char* fc = get_char(id, c);
 		text::character tc = text::make(x, y, (int)(fc->width * scale), (int)(fc->height * scale), 
 		{ fc->x, fc->y, fc->x + fc->width, fc->y + fc->height }, col, outline);
 		return tc;
+	}*/
+
+	font_info* get_info(u32 id) {
+		return &((font*)fonts[id])->info;
+	}
+
+	font_common* get_common(u32 id) {
+		return &((font*)fonts[id])->common;
 	}
 
 	font_char* get_char(u32 id, char c) {
