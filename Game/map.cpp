@@ -1,31 +1,34 @@
 #include "map.hpp"
 #include <cstring>
 #include <cstdio>
+#include "hash.hpp"
 
-stringmap stringmap::create(u32 data_size, u32 count) {
-	stringmap map;
+hashmap hashmap::create(u32 data_size, u32 count) {
+	hashmap map;
 	map.count = count;
 	map.data_size = data_size;
-	map.keys = array::create(16 * sizeof(char), count);
+	map.keys = array::create(sizeof(u32), count);
 	map.data = array::create(data_size, count);
 	map.next_available = 0;
 	return map;
 }
 
-void stringmap::push(const char* key, void* item) {
-	char* key_loc = (char*)keys[next_available];
+void hashmap::push(const char* key, void* item) {
+	u32 hashed_key = hash::hash(key);
+	u32* key_loc = (u32*)keys[next_available];
 	void* data_loc = data[next_available++];
-	memcpy(key_loc, key, 16 * sizeof(char));
+	memcpy(key_loc, &hashed_key, sizeof(u32));
 	memcpy(data_loc, item, data_size);
 }
 
-void* stringmap::at(u32 index) {
+void* hashmap::at(u32 index) {
 	return data[index];
 }
 
-void* stringmap::at(const char* key) {
+void* hashmap::at(const char* key) {
+	u32 hashed_key = hash::hash(key);
 	for (u32 i = 0; i < count; ++i) {
-		if (!strcmp(key, (const char*)keys[i])) {
+		if (*(u32*)keys[i] == hashed_key) {
 			return data[i];
 		}
 	}
@@ -33,19 +36,19 @@ void* stringmap::at(const char* key) {
 	return NULL;
 }
 
-void* stringmap::operator[](u32 index) {
+void* hashmap::operator[](u32 index) {
 	return at(index);
 }
 
-void* stringmap::operator[](const char* key) {
+void* hashmap::operator[](const char* key) {
 	return at(key);
 }
 
-u32 stringmap::get_count() const {
+u32 hashmap::get_count() const {
 	return count;
 }
 
-void stringmap::destroy() {
+void hashmap::destroy() {
 	data.destroy();
 	keys.destroy();
 }

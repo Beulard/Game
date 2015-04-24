@@ -1,14 +1,14 @@
 #pragma once
 #include "array.hpp"
 
-//	stringmap describes a string indexed map where the data can be anything
-//	and the keys must be maximum 16 characters long C-strings
+//	hashmap describes a string indexed map where the data can be anything
+//	and the keys are hashes of the strings the user chooses
 //	the data can also be accessed by simple indices, like in an array
-class stringmap {
+class hashmap {
 
 	public:
 		//	initialize a map
-		static stringmap create(u32 data_size, u32 count);
+		static hashmap create(u32 data_size, u32 count);
 		//	free memory
 		void destroy();
 		//	add an item to the map

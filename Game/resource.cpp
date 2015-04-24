@@ -15,9 +15,9 @@ namespace resource {
 	std::vector<std::string> fontdesc_files;
 
 	//	contain the loaded data in string indexed maps
-	stringmap image_data_map;
-	stringmap shader_data_map;
-	stringmap fontdesc_data_map;
+	hashmap image_data_map;
+	hashmap shader_data_map;
+	hashmap fontdesc_data_map;
 
 
 	void add_image_png(const char* filename) {
@@ -69,9 +69,9 @@ namespace resource {
 
 	void loading_start() {
 		//	initialize maps
-		image_data_map = stringmap::create(sizeof(image_data), image_files.size());
-		shader_data_map = stringmap::create(sizeof(shader_data), shader_files.size());
-		fontdesc_data_map = stringmap::create(sizeof(fontdesc_data), fontdesc_files.size());
+		image_data_map = hashmap::create(sizeof(image_data), image_files.size());
+		shader_data_map = hashmap::create(sizeof(shader_data), shader_files.size());
+		fontdesc_data_map = hashmap::create(sizeof(fontdesc_data), fontdesc_files.size());
 		//	do the actual loading
 		load_images();
 		load_shaders();
