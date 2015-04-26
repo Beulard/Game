@@ -25,7 +25,7 @@ namespace sprite {
 		batches = array::create(sizeof(spritebatch), count);
 	}
 
-	int make_batch(u32 count, u32 texture, u32 shader) {
+	int make_batch(u32 count, texture* texture, u32 shader) {
 		u32 id = next_available++;
 		spritebatch* batch = (spritebatch*)batches[id];
 		batch->texture = texture;
@@ -107,10 +107,10 @@ namespace sprite {
 		spritebatch* b = (spritebatch*)batches[batch];
 		//	use opengl to render each sprite from the batch
 		shader::use(b->shader);
-		texture::bind(b->texture);
+		b->texture->bind();
 
 		//	normalize texture coordinates
-		vec2i tex_size = texture::get_size(b->texture);
+		vec2i tex_size = b->texture->get_size();
 		for (u32 i = 0; i < b->sprites.get_item_count(); ++i) {
 			sprite* s = (sprite*)b->sprites[i];
 			for (u32 j = 0; j < 4; ++j) {

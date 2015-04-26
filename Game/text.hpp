@@ -3,6 +3,8 @@
 #include "GL/glew.h"
 #include "array.hpp"
 
+class texture;
+
 //	text is the equivalent to sprites, but for screen text
 //	it allows to draw individual characters to the screen given
 //	font information.
@@ -30,7 +32,7 @@ namespace text {
 	//	it also holds locations of attributes and uniforms for the shader
 	//	it is used for optimized drawing of text by opengl
 	struct textbatch {
-		u32 texture;
+		texture* texture;
 		u32 shader;
 
 		GLuint vbo;
@@ -52,7 +54,7 @@ namespace text {
 	//	initialize the textbatch array
 	void init(u32 count);
 	//	create a textbatch with a designated texture and shader program
-	int make_batch(u32 count, u32 texture, u32 shader);
+	int make_batch(u32 count, texture* texture, u32 shader);
 	//	clean up every character and batch
 	void destroy();
 

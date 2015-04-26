@@ -16,7 +16,7 @@ namespace font {
 		fonts.destroy();
 	}
 
-	int make(array fontdesc, u32 tex) {
+	int make(array fontdesc, texture* tex) {
 		stream::byte_instream font_stream(fontdesc);
 
 		//	check if description has correct format

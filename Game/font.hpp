@@ -53,7 +53,7 @@ namespace font {
 		font_info info;
 		font_common common;
 		array chars;
-		texture::texture* tex;
+		texture* tex;
 	};
 
 	//	initialize fonts array
@@ -62,7 +62,7 @@ namespace font {
 	void destroy();
 	
 	//	create a font from its binary description and texture
-	int make(array fontdesc, u32 tex);
+	int make(array fontdesc, texture* tex);
 
 	//	returns info about the font
 	font_info* get_info(u32 id);
@@ -76,3 +76,6 @@ namespace font {
 	int get_space_width(u32 font);
 
 }
+
+//	TODO
+//class font {};

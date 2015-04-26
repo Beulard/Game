@@ -3,6 +3,8 @@
 #include "GL/glew.h"
 #include "array.hpp"
 
+class texture;
+
 namespace sprite {
 
 
@@ -22,7 +24,7 @@ namespace sprite {
 	//	it also holds locations of attributes and uniforms for the shader
 	//	it is used for optimized drawing of sprites by opengl
 	struct spritebatch {
-		u32 texture;
+		texture* texture;
 		u32 shader;
 
 		GLuint vbo;
@@ -43,7 +45,7 @@ namespace sprite {
 	//	initialize the spritebatch array
 	void init(u32 count);
 	//	create a sprite batch with a designated texture and shader program
-	int make_batch(u32 count, u32 texture, u32 shader);
+	int make_batch(u32 count, texture* texture, u32 shader);
 	//	clean up every sprite and batch
 	void destroy();
 

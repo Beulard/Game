@@ -47,11 +47,8 @@ bool Init(u32 width, u32 height) {
 int main(int argc, char** argv) {
 	u32 width = 800, height = 600;
 
-	//	TODO wtf
+	//	TODO wtf is this
 	Init(width, height);
-
-	array a = array::create(24, 25);
-	void* b = a[25];
 
 	//	TODO MAKE IT OOP, WITHOUT CONSTRUCTORS
 	//	TODO change create, make, etc. to something consistent like new
@@ -73,7 +70,6 @@ int main(int argc, char** argv) {
 
 	resource::loading_start();
 
-	texture::init(resource::get_image_count());
 	shader::init(resource::get_shader_count());
 	font::init(resource::get_font_count());
 
@@ -84,14 +80,14 @@ int main(int argc, char** argv) {
 	auto shader_sprite = shader::make(sprite_vertex->code, sprite_fragment->code);
 
 	resource::image_data* font_calibri_img = resource::get_image("calibri92_0.png");
-	u32 font_calibri_tex = texture::make(font_calibri_img->bytes, font_calibri_img->x, font_calibri_img->y, font_calibri_img->bpp);
+	texture font_calibri_tex = texture::create(font_calibri_img->bytes, font_calibri_img->x, font_calibri_img->y, font_calibri_img->bpp);
 	resource::fontdesc_data* font_calibri_desc = resource::get_fontdesc("calibri92.fnt");
 
 	resource::shader_data* text_vertex = resource::get_shader("text.vs");
 	resource::shader_data* text_fragment = resource::get_shader("text.fs");
 	auto shader_text = shader::make(text_vertex->code, text_fragment->code);
 
-	u32 font_calibri = font::make(font_calibri_desc->bytes, font_calibri_tex);
+	u32 font_calibri = font::make(font_calibri_desc->bytes, &font_calibri_tex);
 
 	float projection[] = {
 		2 / (float)width, 0, 0, 0,
@@ -106,13 +102,13 @@ int main(int argc, char** argv) {
 	text::init(1);
 	text::set_projection(projection);
 	text::character calA = text::make_char(' ', font_calibri, 100, 100, 1.f, { 255, 255, 255, 255 }, { 0, 0, 0, 255 });
-	int text_batch = text::make_batch(128, font_calibri_tex, shader_text);
+	int text_batch = text::make_batch(128, &font_calibri_tex, shader_text);
 	
 	text::string hello_world = text::make_string("And so it is that the knight\nwas defeated by the\nforces of evil...", font_calibri, 10, 1, 1.f, white, { 255, 255, 255, 0 });
 
 
 	resource::image_data* grass = resource::get_image("grass2.png");
-	auto grass_tex = texture::make(grass->bytes, grass->x, grass->y, grass->bpp);
+	auto grass_tex = texture::create(grass->bytes, grass->x, grass->y, grass->bpp);
 
 
 	glfwSetKeyCallback(window, key_callback);
@@ -121,7 +117,7 @@ int main(int argc, char** argv) {
 	sprite::init(1);
 	sprite::set_projection(projection);
 
-	auto batch1 = sprite::make_batch(80 * 60 + 1, grass_tex, shader_sprite);
+	auto batch1 = sprite::make_batch(80 * 60 + 1, &grass_tex, shader_sprite);
 
 	auto sprites = array::create(sizeof(sprite::sprite), 80 * 60);
 	for (u32 j = 0; j < 60; ++j) {
@@ -156,7 +152,6 @@ int main(int argc, char** argv) {
 	font::destroy(); 
 	sprite::destroy();
 	resource::destroy();
-	texture::destroy();
 	glfwTerminate();
 	return 0;
 }

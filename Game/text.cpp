@@ -4,6 +4,7 @@
 #include "texture.hpp"
 #include "font.hpp"
 #include <cstring>
+#include "texture.hpp"
 //todo remove
 #include <cstdio>
 
@@ -28,7 +29,7 @@ namespace text {
 		batches = array::create(sizeof(textbatch), count);
 	}
 
-	int make_batch(u32 count, u32 texture, u32 shader) {
+	int make_batch(u32 count, texture* texture, u32 shader) {
 		u32 id = next_available++;
 		textbatch* batch = (textbatch*)batches[id];
 		batch->texture = texture;
@@ -132,7 +133,7 @@ namespace text {
 				font::font_char* fc = font::get_char(font, strtxt[i]);
 				character* c = (character*)s.chars[i];
 				int ypos = y + (int)(scale * (common->base - fc->height));
-				*c = make_char(fc, cursor + (__int16)fc->xoffset, y + fc->yoffset * scale - common->base * scale / 3.f, scale, col, outline_col);
+				*c = make_char(fc, cursor + (__int16)fc->xoffset, y + (int)(fc->yoffset * scale) - int(common->base * scale / 3.f), scale, col, outline_col);
 				printf("%d\n", (short)fc->yoffset);
 				cursor += (int)(scale * fc->xadvance);
 			}
@@ -156,10 +157,10 @@ namespace text {
 		textbatch* b = (textbatch*)batches[batch];
 		//	use opengl to render each sprite from the batch
 		shader::use(b->shader);
-		texture::bind(b->texture);
+		b->texture->bind();
 
 		//	normalize texture coordinates
-		vec2i tex_size = texture::get_size(b->texture);
+		vec2i tex_size = b->texture->get_size();
 		for (u32 i = 0; i < b->characters.get_item_count(); ++i) {
 			character* c = (character*)b->characters[i];
 			for (u32 j = 0; j < 4; ++j) {
