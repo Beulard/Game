@@ -50,7 +50,16 @@ int main(int argc, char** argv) {
 	//	TODO wtf
 	Init(width, height);
 
-	//	TODO RENDER MULTIPLE CHARS, NEWLINES ETC
+	array a = array::create(24, 25);
+	void* b = a[25];
+
+	//	TODO MAKE IT OOP, WITHOUT CONSTRUCTORS
+	//	TODO change create, make, etc. to something consistent like new
+	//	TODO freetype
+	//	TODO freetype outline
+	//	TODO organize
+	//	TODO better rendering process somehow
+	
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -91,15 +100,15 @@ int main(int argc, char** argv) {
 		-1, 1, 1, 1
 	};
 
-	color black = { 0, 0, 0, 255 };
-	color white = { 255, 255, 255, 255 };
+	const color black = { 0, 0, 0, 255 };
+	const color white = { 255, 255, 255, 255 };
 
 	text::init(1);
 	text::set_projection(projection);
 	text::character calA = text::make_char(' ', font_calibri, 100, 100, 1.f, { 255, 255, 255, 255 }, { 0, 0, 0, 255 });
 	int text_batch = text::make_batch(128, font_calibri_tex, shader_text);
-
-	text::string hello_world = text::make_string("And so it is that the knight\nwas defeated by the\nforces of evil...", font_calibri, 10, 1, 1.f, white, black);
+	
+	text::string hello_world = text::make_string("And so it is that the knight\nwas defeated by the\nforces of evil...", font_calibri, 10, 1, 1.f, white, { 255, 255, 255, 0 });
 
 
 	resource::image_data* grass = resource::get_image("grass2.png");

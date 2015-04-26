@@ -80,6 +80,7 @@
     <ClCompile Include="font.cpp" />
     <ClCompile Include="hash.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="renderer.cpp" />
     <ClCompile Include="resource.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="sprite.cpp" />
@@ -94,6 +95,7 @@
     <ClInclude Include="font.hpp" />
     <ClInclude Include="graphics_types.hpp" />
     <ClInclude Include="hash.hpp" />
+    <ClInclude Include="renderer.hpp" />
     <ClInclude Include="resource.hpp" />
     <ClInclude Include="shader.hpp" />
     <ClInclude Include="sprite.hpp" />

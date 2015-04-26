@@ -31,15 +31,21 @@ void array::destroy() {
 
 void array::resize(u32 count) {
 	if (data) {
-		data = realloc(data, HEADER_SIZE + count * get_item_size());
-		set_item_count(count);
+		void* newdata = realloc(data, HEADER_SIZE + count * get_item_size());
+		if (newdata) {
+			data = newdata;
+			set_item_count(count);
+		}
+		else {
+			printf("Could not reallocate array '0x%p'", this);
+		}
 	}
 }
 
 void* array::at(u32 index) {
 	if(index < get_item_count() && data)
 		return ((u8*)data + HEADER_SIZE + index * get_item_size());
-	printf("Trying to access array '0x%p' at index '%p' : out of bounds\n", this, index);
+	printf("Trying to access array '0x%p' at index '%d' : out of bounds\n", this, index);
 	return NULL;
 }
 

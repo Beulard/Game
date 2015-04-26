@@ -32,7 +32,7 @@ void* hashmap::at(const char* key) {
 			return data[i];
 		}
 	}
-	printf("Trying to access map '0x%d' at key '%s' : item not found\n", this, key);
+	printf("Trying to access map '0x%p' at key '%s' : item not found\n", this, key);
 	return NULL;
 }
 

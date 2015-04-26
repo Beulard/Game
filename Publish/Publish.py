@@ -12,7 +12,7 @@ print('\ncopying exe and config...')
 for root, _, files in os.walk('bin/'):
     for f in files:
         ext = f.split('.')
-        if ext[1] == 'exe' or ext[1] == 'json':
+        if ext[1] == 'exe' or ext[1] == 'json' or ext[1] == 'dll':
             print('  copying \'' + f + '\'')
             shutil.copy('bin/' + f, 'pb/')
 
