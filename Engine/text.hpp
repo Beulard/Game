@@ -1,6 +1,6 @@
 #pragma once
 #include "graphics_types.hpp"
-#include "GL/glew.h"
+//#include "GL/glew.h"
 #include "array.hpp"
 
 class texture;
@@ -35,13 +35,13 @@ namespace text {
 		texture* texture;
 		u32 shader;
 
-		GLuint vbo;
-		GLint attrib_coords;
-		GLint attrib_texcoords;
-		GLint attrib_color;
-		GLint attrib_outline_color;
-		GLint uniform_texture;
-		GLint uniform_projection;
+		u32 vbo;
+		int attrib_coords;
+		int attrib_texcoords;
+		int attrib_color;
+		int attrib_outline_color;
+		int uniform_texture;
+		int uniform_projection;
 
 		u32 next_available;
 		array characters;

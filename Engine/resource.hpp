@@ -1,6 +1,7 @@
 #include "types.hpp"
 #include "array.hpp"
 #include <string>
+#include <mutex>
 
 namespace resource {
 
@@ -43,8 +44,25 @@ namespace resource {
 	//	The load_* functions force the files to get loaded when the call is made
 	//void load_shader(const char* filename);
 
+	typedef void (*item_callback)(void*);
+	typedef void (*done_callback)();
 	//	Start/update the loading of files
-	void loading_start();
+	void loading_start(item_callback on_item_loaded, void* item_param, done_callback on_done);
+
+	//	load the resources synchronously
+	void load_sync();
+	
+	template<class T>
+	struct mutexed_var {
+		std::mutex m;
+		T var;
+	};
+
+	//	start the loading and return, and call 'on_item_loaded' and 'on_done' appropriately
+	void load_async(item_callback on_item_loaded, void* item_param, done_callback on_done);
+
+	//	clears all items that were set to be loaded
+	void clear_loading_list();
 
 	//	returns the image loaded and stored at 'name'
 	image_data* get_image(const std::string& name);

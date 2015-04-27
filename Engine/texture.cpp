@@ -1,5 +1,5 @@
 #include "texture.hpp"
-
+#include "GL/glew.h"
 
 texture texture::create(u8* bytes, int x, int y, int bpp) {
 	texture tex;

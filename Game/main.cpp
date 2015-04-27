@@ -1,6 +1,6 @@
 #include <iostream>
-#include "GL/glew.h"
-#include "GLFW/glfw3.h"
+//#include "GL/glew.h"
+//#include "GLFW/glfw3.h"
 #include "resource.hpp"
 #include "texture.hpp"
 #include "shader.hpp"
@@ -11,15 +11,17 @@
 #include "font.hpp"
 #include "hash.hpp"
 #include "text.hpp"
+#include "snoop.hpp"
+#include "game.hpp"
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+/*void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, true);
 	}
-}
+}*/
 
 
-GLFWwindow* window;
+/*GLFWwindow* window;
 
 bool Init(u32 width, u32 height) {
 	if (!glfwInit()){
@@ -44,11 +46,32 @@ bool Init(u32 width, u32 height) {
 	}
 }
 
+void on_item_loaded(void* progress) {
+	int* p = (int*)progress;
+	printf("Loading progress: %d\n", ++(*p));
+}
+
+void on_done() {
+	printf("Done!\n");
+}
+
+void item(void* var) {
+	resource::mutexed_var<int>* p = (resource::mutexed_var<int>*)var;
+	p->m.lock();
+	p->var++;
+	printf("%d\n", p->var);
+	p->m.unlock();
+}*/
+
 int main(int argc, char** argv) {
 	u32 width = 800, height = 600;
+	
+	snoop::init("snoop game", width, height);
+	snoop::run(&game::init, &game::update);
+	snoop::destroy();
 
 	//	TODO wtf is this
-	Init(width, height);
+	//Init(width, height);
 
 	//	TODO MAKE IT OOP, WITHOUT CONSTRUCTORS
 	//	TODO change create, make, etc. to something consistent like new
@@ -57,7 +80,7 @@ int main(int argc, char** argv) {
 	//	TODO organize
 	//	TODO better rendering process somehow
 	
-	glEnable(GL_BLEND);
+	/*glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	resource::add_image_png("grass2.png");
@@ -68,11 +91,16 @@ int main(int argc, char** argv) {
 	resource::add_shader("text.fs");
 	resource::add_font("calibri92.fnt", "calibri92_0.png");
 
-	resource::loading_start();
+	int progress = 0;
+
+	resource::mutexed_var<int> prog;
+	prog.var = 0;
+	
+	resource::loading_start(&on_item_loaded, &progress, &on_done);
+	resource::load_async(item, &prog, NULL);
 
 	shader::init(resource::get_shader_count());
 	font::init(resource::get_font_count());
-
 
 	resource::shader_data* sprite_vertex = resource::get_shader("sprite.vs");
 	resource::shader_data* sprite_fragment = resource::get_shader("sprite.fs");
@@ -129,7 +157,7 @@ int main(int argc, char** argv) {
 	auto s1 = sprite::make(200, 200, 200, 200, { 0, 0, 32, 32 }, { 100, 100, 50, 150 });
 
 	while (!glfwWindowShouldClose(window)) {
-		glClearColor(0.f, 0.f, 0.f, 0.f);
+		glClearColor(0.f, 0.f, 0.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		glfwPollEvents();
 
@@ -152,6 +180,6 @@ int main(int argc, char** argv) {
 	font::destroy(); 
 	sprite::destroy();
 	resource::destroy();
-	glfwTerminate();
+	glfwTerminate();*/
 	return 0;
 }

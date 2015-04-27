@@ -1,5 +1,6 @@
 #include "shader.hpp"
 #include "array.hpp"
+#include "GL/glew.h"
 #include <cstdio>
 #include <cstdlib>
 

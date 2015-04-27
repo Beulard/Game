@@ -54,7 +54,7 @@ void* array::operator[](u32 index) {
 }
 
 bool array::is_valid() {
-	return !data ? false : true;
+	return data ? true : false;
 }
 
 const u32 array::get_item_size() const {

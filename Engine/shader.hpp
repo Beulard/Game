@@ -1,5 +1,5 @@
 #include "types.hpp"
-#include "GL/glew.h"
+//#include "GL/glew.h"
 
 namespace shader {
 
@@ -15,8 +15,8 @@ namespace shader {
 
 	void add_attrib(const char* name);
 	//	return the attribute location of an attribute from the shader
-	GLint get_attrib_location(u32 id, const char* name);
+	int get_attrib_location(u32 id, const char* name);
 	//	same for a uniform variable
-	GLint get_uniform_location(u32 id, const char* name);
+	int get_uniform_location(u32 id, const char* name);
 
 }

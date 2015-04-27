@@ -1,6 +1,5 @@
 #pragma once
 #include "types.hpp"
-#include "GL/glew.h"
 
 class texture {
 public:
@@ -16,7 +15,7 @@ public:
 	const vec2i& get_size() const;
 
 private:
-	GLuint id;
+	u32 id;
 	vec2i size;
 };
 

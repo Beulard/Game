@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include "map.hpp"
+#include <thread>
 
 namespace resource {
 	
@@ -33,17 +34,19 @@ namespace resource {
 		fontdesc_files.push_back(fontdesc);
 	}
 
-	void load_images() {
+	void load_images(item_callback on_item_loaded, void* param) {
 		for (u32 i = 0; i < image_files.size(); ++i){
 			//	for each image file added, insert a new entry in the 'image_data_map' and populate the image_data structure
 			int x, y, n;
 			u8* img_bytes = stbi_load(image_files[i].c_str(), &x, &y, &n, 4);
 			image_data data = { img_bytes, x, y, n };
 			image_data_map.push(image_files[i].c_str(), &data);
+			if (on_item_loaded)
+				on_item_loaded(param);
 		}
 	}
 
-	void load_shaders() {
+	void load_shaders(item_callback on_item_loaded, void* param) {
 		for (u32 i = 0; i < shader_files.size(); ++i) {
 			shader_type st = ST_VS;
 			if (shader_files[i][shader_files[i].size() - 2] == 'v')
@@ -57,25 +60,56 @@ namespace resource {
 			data.type = st;
 			strcpy_s(data.code, 1024, code.c_str());
 			shader_data_map.push(shader_files[i].c_str(), &data);
+			if (on_item_loaded)
+				on_item_loaded(param);
 		}
 	}
 
-	void load_fontdesc() {
+	void load_fontdesc(item_callback on_item_loaded, void* param) {
 		for (u32 i = 0; i < fontdesc_files.size(); ++i) {
 			fontdesc_data data = { file::read_binary(fontdesc_files[i].c_str()) };
 			fontdesc_data_map.push(fontdesc_files[i].c_str(), &data);
+			if (on_item_loaded)
+				on_item_loaded(param);
 		}
 	}
 
-	void loading_start() {
+	void loading_start(item_callback on_item_loaded, void* item_param, done_callback on_done) {
 		//	initialize maps
 		image_data_map = hashmap::create(sizeof(image_data), image_files.size());
 		shader_data_map = hashmap::create(sizeof(shader_data), shader_files.size());
 		fontdesc_data_map = hashmap::create(sizeof(fontdesc_data), fontdesc_files.size());
 		//	do the actual loading
-		load_images();
-		load_shaders();
-		load_fontdesc();
+		load_images(on_item_loaded, item_param);
+		load_shaders(on_item_loaded, item_param);
+		load_fontdesc(on_item_loaded, item_param);
+		if (on_done)
+			on_done();
+		clear_loading_list();
+	}
+
+	void load_sync() {
+		loading_start(NULL, NULL, NULL);
+	}
+
+	void images(item_callback on_item_loaded, void* param) {
+		for (u32 i = 0; i < 10; ++i) {
+			std::chrono::milliseconds sleep(200);
+			std::this_thread::sleep_for(sleep);
+			if (on_item_loaded)
+				on_item_loaded(param);
+		}
+	}
+
+	void load_async(item_callback on_item_loaded, void* param, done_callback done) {
+		std::thread parent(images, on_item_loaded, param);
+		parent.join();
+	}
+
+	void clear_loading_list() {
+		image_files.clear();
+		shader_files.clear();
+		fontdesc_files.clear();
 	}
 
 	image_data* get_image(const std::string& name) {
@@ -107,6 +141,14 @@ namespace resource {
 		for (u32 i = 0; i < image_data_map.get_count(); ++i) {
 			stbi_image_free(((image_data*)image_data_map[i])->bytes);
 		}
+		for (u32 i = 0; i < fontdesc_data_map.get_count(); ++i) {
+			fontdesc_data* fd = (fontdesc_data*)fontdesc_data_map[i];
+			if (fd->bytes.is_valid())
+				fd->bytes.destroy();
+		}
+		image_data_map.destroy();
+		shader_data_map.destroy();
+		fontdesc_data_map.destroy();
 	}
 
 }

@@ -134,7 +134,6 @@ namespace text {
 				character* c = (character*)s.chars[i];
 				int ypos = y + (int)(scale * (common->base - fc->height));
 				*c = make_char(fc, cursor + (__int16)fc->xoffset, y + (int)(fc->yoffset * scale) - int(common->base * scale / 3.f), scale, col, outline_col);
-				printf("%d\n", (short)fc->yoffset);
 				cursor += (int)(scale * fc->xadvance);
 			}
 		}
