@@ -73,8 +73,8 @@ int main(int argc, char** argv) {
 	//	TODO wtf is this
 	//Init(width, height);
 
-	//	TODO MAKE IT OOP, WITHOUT CONSTRUCTORS
-	//	TODO change create, make, etc. to something consistent like new
+	//	TODO MAKE IT OOP
+	//	TODO change create, make, etc. to something consistent
 	//	TODO freetype
 	//	TODO freetype outline
 	//	TODO organize
