@@ -1,6 +1,4 @@
 #include "hash.hpp"
-//	TODO REMOVE
-#include <cstdio>
 
 namespace hash {
 

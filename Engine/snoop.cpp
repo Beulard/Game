@@ -7,7 +7,6 @@
 namespace snoop {
 
 	enum {
-		LOADING,
 		GAME_INIT,
 		GAME_RUN
 	} state;
@@ -51,44 +50,25 @@ namespace snoop {
 		});
 
 		//	do some mandatory resource loading
-		resource::add_image_png("loading_screen.png");
-		resource::add_image_png("loading_screen.png");
-		resource::add_image_png("loading_screen.png");
-		resource::add_image_png("loading_screen.png");
-		resource::add_image_png("loading_screen.png");
-		resource::add_image_png("loading_screen.png");
-		resource::add_image_png("loading_screen.png");
-		resource::add_image_png("loading_screen.png");
-		resource::add_image_png("loading_screen.png");
-		resource::add_image_png("loading_screen.png");
-		resource::add_image_png("loading_screen.png");
-		resource::add_image_png("loading_screen.png");
-		resource::load_async();
-		state = LOADING;
+		resource::add_spritesheet("loading_screen.json");
+		resource::add_shader("sprite.vs");
+		resource::add_shader("sprite.fs");
+		resource::load_sync();
 
 		return true;
 	}
 
 	void run(init_func i, update_func u) {
+		
+		i();
 
 		while (!glfwWindowShouldClose(window)) {
-			glClearColor(.20f, .47f, .20f, 1.f);
+			glClearColor(0.f, 0.f, 0.f, 1.f);
 			glClear(GL_COLOR_BUFFER_BIT);
 			glfwPollEvents();
 
-			static int count = resource::get_total_count();
-			static int prog = 0;
 
-			switch (state) {
-			case LOADING:
-				prog = resource::get_loading_progress();
-				printf("%d\n", prog);
-				//	if loading is over, join the loader thread and go to game init
-				if (prog >= count) {
-					resource::loading_join();
-					state = GAME_INIT;
-				}
-				break;
+/*			switch (state) {
 			case GAME_INIT:
 				//	run game init function
 				i();
@@ -98,7 +78,10 @@ namespace snoop {
 				//	run game update function
 				u();
 				break;
-			}
+			}*/
+
+			//	update game
+			u();
 			//	display
 			glfwSwapBuffers(window);
 		}
