@@ -1,4 +1,5 @@
 #pragma once
+#define GLEW_STATIC
 
 typedef void(*init_func)();
 typedef void(*update_func)();

@@ -7,6 +7,7 @@
 #include <vector>
 #include "map.hpp"
 #include <thread>
+#include <atomic>
 
 namespace resource {
 	
@@ -19,6 +20,9 @@ namespace resource {
 	hashmap image_data_map;
 	hashmap shader_data_map;
 	hashmap fontdesc_data_map;
+
+	std::thread loader_thread;
+	std::atomic_int loading_progress;
 
 
 	void add_image_png(const char* filename) {
@@ -92,18 +96,30 @@ namespace resource {
 		loading_start(NULL, NULL, NULL);
 	}
 
-	void images(item_callback on_item_loaded, void* param) {
-		for (u32 i = 0; i < 10; ++i) {
+	void images(int nb) {
+		for (u32 i = 0; i < nb; ++i) {
 			std::chrono::milliseconds sleep(200);
 			std::this_thread::sleep_for(sleep);
-			if (on_item_loaded)
-				on_item_loaded(param);
+			loading_progress++;
 		}
 	}
 
-	void load_async(item_callback on_item_loaded, void* param, done_callback done) {
-		std::thread parent(images, on_item_loaded, param);
-		parent.join();
+	int get_total_count() {
+		return image_files.size() + shader_files.size() + fontdesc_files.size();
+	}
+
+	void load_async() {
+		loading_progress = 0;
+		//	start the loader thread
+		loader_thread = std::thread(images, image_files.size());
+	}
+
+	void loading_join() {
+		loader_thread.join();
+	}
+
+	int get_loading_progress() {
+		return loading_progress.load();
 	}
 
 	void clear_loading_list() {
@@ -137,6 +153,9 @@ namespace resource {
 	}
 
 	void destroy() {
+		//	make sure the loader thread has been joined
+		if (loader_thread.joinable())
+			loader_thread.join();
 		//	free every image loaded by stb
 		for (u32 i = 0; i < image_data_map.get_count(); ++i) {
 			stbi_image_free(((image_data*)image_data_map[i])->bytes);

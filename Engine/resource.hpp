@@ -1,7 +1,6 @@
 #include "types.hpp"
 #include "array.hpp"
 #include <string>
-#include <mutex>
 
 namespace resource {
 
@@ -52,14 +51,21 @@ namespace resource {
 	//	load the resources synchronously
 	void load_sync();
 	
-	template<class T>
+	/*template<class T>
 	struct mutexed_var {
 		std::mutex m;
 		T var;
-	};
+	};*/
+
+	//	returns the total number of items to be loaded
+	int get_total_count();
 
 	//	start the loading and return, and call 'on_item_loaded' and 'on_done' appropriately
-	void load_async(item_callback on_item_loaded, void* item_param, done_callback on_done);
+	void load_async();
+	//	returns only when loading is finished
+	void loading_join();
+	//	returns how many items have been loaded
+	int get_loading_progress();
 
 	//	clears all items that were set to be loaded
 	void clear_loading_list();
