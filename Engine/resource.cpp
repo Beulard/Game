@@ -94,7 +94,8 @@ namespace resource {
 		for (u32 i = 0; i < spritesheet_files.size(); ++i) {
 			std::string desc = file::read_all(spritesheet_files[i].c_str());
 			spritesheet_data data;
-			strcpy_s(data.description, spritesheet_max_size , desc.c_str());
+			data.description = desc;
+			//strcpy_s(data.description, spritesheet_max_size , desc.c_str());
 			spritesheet_data_map.push(spritesheet_files[i].c_str(), &data);
 			loading_progress++;
 		}

@@ -39,7 +39,7 @@ namespace resource {
 	//	contains the contents of the json description file
 	struct spritesheet_data {
 		//	16 KB max size
-		char description[spritesheet_max_size];
+		std::string description;
 	};
 
 	//	The add_* functions add the files to the loading list to get loaded while displaying a loading screen
