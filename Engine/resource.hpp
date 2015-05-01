@@ -21,11 +21,12 @@ namespace resource {
 		ST_FS
 	};
 
+	const u32 shader_max_size = 8192;
 	//	shader_data is a shader type and the GLSL code from the shader source file	
 	struct shader_data {
 		shader_type type;
 		//	8 KB max size
-		char code[8192];
+		char code[shader_max_size];
 	};
 
 
@@ -34,10 +35,11 @@ namespace resource {
 		array bytes;
 	};
 
+	const u32 spritesheet_max_size = 16384;
 	//	contains the contents of the json description file
 	struct spritesheet_data {
 		//	16 KB max size
-		char description[16384];
+		char description[spritesheet_max_size];
 	};
 
 	//	The add_* functions add the files to the loading list to get loaded while displaying a loading screen
@@ -69,13 +71,13 @@ namespace resource {
 	void clear_loading_list();
 
 	//	returns the image loaded and stored at 'name'
-	image_data* get_image(const std::string& name);
+	image_data* get_image(const char* name);
 	//	returns spritesheet
-	spritesheet_data* get_spritesheet(const std::string& name);
+	spritesheet_data* get_spritesheet(const char* name);
 	//	returns the shader loaded and stored at 'name'
-	shader_data* get_shader(const std::string& name);
+	shader_data* get_shader(const char* name);
 	//	returns the font description with name 'name'
-	fontdesc_data* get_fontdesc(const std::string& name);
+	fontdesc_data* get_fontdesc(const char* name);
 
 	//	returns the number of images
 	u32 get_image_count();

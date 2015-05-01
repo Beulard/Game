@@ -76,7 +76,7 @@ namespace resource {
 			std::string code = file::read_all(shader_files[i].c_str());
 			shader_data data;
 			data.type = st;
-			strcpy_s(data.code, 1024, code.c_str());
+			strcpy_s(data.code, shader_max_size, code.c_str());
 			shader_data_map.push(shader_files[i].c_str(), &data);
 			loading_progress++;
 		}
@@ -94,7 +94,7 @@ namespace resource {
 		for (u32 i = 0; i < spritesheet_files.size(); ++i) {
 			std::string desc = file::read_all(spritesheet_files[i].c_str());
 			spritesheet_data data;
-			strcpy_s(data.description, desc.size()+1, desc.c_str());
+			strcpy_s(data.description, spritesheet_max_size , desc.c_str());
 			spritesheet_data_map.push(spritesheet_files[i].c_str(), &data);
 			loading_progress++;
 		}
@@ -128,7 +128,7 @@ namespace resource {
 	}
 
 	int get_total_count() {
-		return image_files.size() + shader_files.size() + fontdesc_files.size();
+		return image_files.size() + shader_files.size() + fontdesc_files.size() + spritesheet_files.size();
 	}
 
 	void load_async() {
@@ -163,20 +163,20 @@ namespace resource {
 		spritesheet_files.clear();
 	}
 
-	image_data* get_image(const std::string& name) {
-		return (image_data*)image_data_map[name.c_str()];
+	image_data* get_image(const char* name) {
+		return (image_data*)image_data_map[(data_folder + name).c_str()];
 	}
 
-	shader_data* get_shader(const std::string& name) {
-		return (shader_data*)shader_data_map[name.c_str()];
+	shader_data* get_shader(const char* name) {
+		return (shader_data*)shader_data_map[(data_folder + name).c_str()];
 	}
 
-	fontdesc_data* get_fontdesc(const std::string& name) {
-		return (fontdesc_data*)fontdesc_data_map[name.c_str()];
+	fontdesc_data* get_fontdesc(const char* name) {
+		return (fontdesc_data*)fontdesc_data_map[(data_folder + name).c_str()];
 	}
 
-	spritesheet_data* get_spritesheet(const std::string& name) {
-		return (spritesheet_data*)spritesheet_data_map[name.c_str()];
+	spritesheet_data* get_spritesheet(const char* name) {
+		return (spritesheet_data*)spritesheet_data_map[(data_folder + name).c_str()];
 	}
 
 	u32 get_image_count() {
