@@ -59,7 +59,7 @@ namespace snoop {
 	}
 
 	void run(init_func i, update_func u) {
-		
+		//	call game init function
 		i();
 
 		while (!glfwWindowShouldClose(window)) {

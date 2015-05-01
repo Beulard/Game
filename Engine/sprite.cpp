@@ -56,7 +56,7 @@ namespace sprite {
 		batches.destroy();
 	}
 
-	sprite make(int x, int y, int width, int height, rect subrect, color col) {
+	sprite sprite::create(int x, int y, int width, int height, rect subrect, color col) {
 		#define f(x) (float)x
 
 		return
@@ -96,11 +96,40 @@ namespace sprite {
 		#undef f
 	}
 
-	void draw(sprite* s, u32 batch) {
+	void sprite::move(int x, int y) {
+		//	for each vertex
+		for (u32 i = 0; i < 4; ++i) {
+			//	move x and y coords
+			vertices[i].pos.x += x;
+			vertices[i].pos.y += y;
+		}
+	}
+
+	void sprite::set_width(int width) {
+		int posx = vertices[0].pos.x;
+		vertices[1].pos.x = posx + width;
+		vertices[2].pos.x = posx + width;
+	}
+
+
+	/*
+	void sprite::scale(float scalex, float scaley) {
+		int posx = vertices[0].pos.x;
+		int posy = vertices[0].pos.y;
+		int new_width = (int)(scalex * (float)(vertices[1].pos.x - posx));
+		int new_height = (int)(scaley * (float)(vertices[2].pos.y - posy));
+		
+		vertices[1].pos.x = posx + new_width;
+		vertices[2].pos.x = posx + new_width;
+		vertices[2].pos.y = posy + new_height;
+		vertices[3].pos.y = posy + new_height;
+	}*/
+
+	void sprite::draw(u32 batch) {
 		spritebatch* b = (spritebatch*)batches[batch];
 		//	simply copy the data from the sprite to the batch's array
 		sprite* dest = (sprite*)b->sprites[b->next_available++];
-		memcpy(dest, s, sizeof(sprite));
+		memcpy(dest, this, sizeof(sprite));
 	}
 
 	void render_batch(u32 batch) {

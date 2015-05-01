@@ -16,8 +16,16 @@ namespace sprite {
 	};
 
 	//	sprite data, aka 4 vertices
-	struct sprite {
+	class sprite {
+	public :
 		vertex_data vertices[4];
+
+		static sprite create(int x = 0, int y = 0, int width = 0, int height = 0, rect subrect = { 0, 0, 0, 0 }, color col = { 0, 0, 0, 0 });
+		void move(int x, int y);
+		void draw(u32 batch);
+		//void scale(float x, float y);
+		void set_width(int width);
+		void set_height(int height);
 	};
 
 	//	a spritebatch contains a contiguous array of sprite data, as well as handles to a texture and a shader
