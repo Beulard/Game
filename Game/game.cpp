@@ -1,6 +1,7 @@
 #include "game.hpp"
 #include "resource.hpp"
 #include "spritesheet.hpp"
+#include "loading.hpp"
 
 namespace game {
 
@@ -11,6 +12,37 @@ namespace game {
 		spritesheet s = spritesheet::create(d->description);
 		sprite_info* si = s.get_sprite("loading....png");
 		printf("%d %d %d %d\n", si->x, si->y, si->w, si->h);
+
+		resource::add_shader("text.vs");
+		resource::add_shader("text.vs");
+		resource::add_shader("text.vs");
+		resource::add_shader("text.vs");
+		resource::add_shader("text.vs");
+		resource::add_shader("text.vs");
+		resource::add_shader("text.vs");
+		resource::add_shader("text.vs");
+		resource::add_shader("text.vs");
+		resource::add_shader("text.vs");
+		resource::add_shader("text.vs");
+		resource::add_shader("text.vs");
+		resource::add_shader("text.vs");
+		resource::add_shader("text.vs");
+		resource::add_shader("text.vs");
+		resource::add_shader("text.vs");
+		resource::add_shader("text.vs");
+		resource::add_shader("text.vs");
+		resource::add_shader("text.vs");
+		resource::add_shader("text.vs");
+		resource::add_shader("text.vs");
+		resource::add_shader("text.vs");
+		resource::add_shader("text.vs");
+		resource::add_shader("text.vs");
+		resource::add_shader("text.vs");
+		resource::add_shader("text.vs");
+		resource::add_shader("text.vs");
+		resource::add_shader("text.vs");
+		resource::add_shader("text.vs");
+
 	}
 
 	void update() {

@@ -1,5 +1,6 @@
 #include "loading.hpp"
 #include "sprite.hpp"
+#include <thread>
 
 
 loading loading::create(u32 bar_width, u32 max, sprite::sprite* outline, sprite::sprite* bar) {
@@ -20,7 +21,7 @@ void loading::update(u32 _progress) {
 	progress = _progress;
 	float p = (float)progress / (float)max;
 	
-	bar->set_width(p * bar_width);
+	bar->set_width(p * (bar_width));
 }
 
 void loading::draw(u32 batch) {

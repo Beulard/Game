@@ -2,6 +2,7 @@
 #define GLEW_STATIC
 
 typedef void(*init_func)();
+typedef void(*load_func)();
 typedef void(*update_func)();
 
 namespace snoop {

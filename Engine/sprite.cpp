@@ -106,9 +106,9 @@ namespace sprite {
 	}
 
 	void sprite::set_width(int width) {
-		int posx = vertices[0].pos.x;
-		vertices[1].pos.x = posx + width;
-		vertices[2].pos.x = posx + width;
+		int posx = (int)vertices[0].pos.x;
+		vertices[1].pos.x = (float)(posx + width);
+		vertices[2].pos.x = (float)(posx + width);
 	}
 
 
@@ -129,7 +129,8 @@ namespace sprite {
 		spritebatch* b = (spritebatch*)batches[batch];
 		//	simply copy the data from the sprite to the batch's array
 		sprite* dest = (sprite*)b->sprites[b->next_available++];
-		memcpy(dest, this, sizeof(sprite));
+		*dest = *this;
+		//memcpy(dest, this, sizeof(sprite));
 	}
 
 	void render_batch(u32 batch) {

@@ -64,9 +64,8 @@ void item(void* var) {
 }*/
 
 int main(int argc, char** argv) {
-	u32 width = 800, height = 600;
 	
-	snoop::init("snoop game", width, height);
+	snoop::init(game::window.name, game::window.width, game::window.height);
 	snoop::run(&game::init, &game::update);
 	snoop::destroy();
 

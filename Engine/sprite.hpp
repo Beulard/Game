@@ -19,9 +19,11 @@ namespace sprite {
 	class sprite {
 	public :
 		vertex_data vertices[4];
-
+	
+		//	creates a sprite with provided parameters
 		static sprite create(int x = 0, int y = 0, int width = 0, int height = 0, rect subrect = { 0, 0, 0, 0 }, color col = { 0, 0, 0, 0 });
 		void move(int x, int y);
+		//	set a specific sprite to be drawn in the next call to render_batch
 		void draw(u32 batch);
 		//void scale(float x, float y);
 		void set_width(int width);
@@ -56,12 +58,6 @@ namespace sprite {
 	int make_batch(u32 count, texture* texture, u32 shader);
 	//	clean up every sprite and batch
 	void destroy();
-
-	//	creates a sprite with provided parameters
-	sprite make(int x = 0, int y = 0, int width = 0, int height = 0, rect subrect = { 0, 0, 0, 0 }, color col = { 0, 0, 0, 0 });
-
-	//	set a specific sprite to be drawn in the next call to render_batch
-	void draw(sprite* s, u32 batch);
 
 	//	render the batch
 	void render_batch(u32 batch);

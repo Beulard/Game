@@ -79,6 +79,7 @@ namespace resource {
 			strcpy_s(data.code, shader_max_size, code.c_str());
 			shader_data_map.push(shader_files[i].c_str(), &data);
 			loading_progress++;
+			std::this_thread::sleep_for(std::chrono::milliseconds(100));
 		}
 	}
 
@@ -143,7 +144,7 @@ namespace resource {
 		loader_threads[0] = std::thread(load_images);
 		loader_threads[1] = std::thread(load_shaders);
 		loader_threads[2] = std::thread(load_fontdescs);
-		loader_threads[2] = std::thread(load_spritesheets);
+		loader_threads[3] = std::thread(load_spritesheets);
 	}
 
 	void loading_join() {
