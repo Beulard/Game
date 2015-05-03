@@ -4,93 +4,82 @@
 #include <cstdio>
 #include <cstdlib>
 
-namespace shader {
+bool check_shader_compiled(GLuint id) {
+	GLint compiled = GL_FALSE;
+	glGetShaderiv(id, GL_COMPILE_STATUS, &compiled);
+	if (compiled != GL_TRUE) {
+		printf("Couldn't compile vertex shader. Printing log:\n");
+		GLint log_length = 0;
+		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &log_length);
+		char* log = (char*)malloc(log_length);
+		glGetShaderInfoLog(id, log_length, NULL, log);
+		printf("%s", log);
+		free(log);
 
-	static array shader_array;
-	static u32 next_available = 0;
-
-	void init(u32 nb_shaders) {
-		shader_array = array::create(sizeof(GLuint), nb_shaders);
+		return false;
 	}
+	return true;
+}
 
-	void destroy() {
-		shader_array.destroy();
+bool check_program_linked(GLuint id) {
+	GLint compiled = GL_FALSE;
+	glGetProgramiv(id, GL_LINK_STATUS, &compiled);
+	if (compiled != GL_TRUE) {
+		printf("Couldn't link program. Printing log:\n");
+		GLint log_length = 0;
+		glGetProgramiv(id, GL_INFO_LOG_LENGTH, &log_length);
+		char* log = (char*)malloc(log_length);
+		glGetProgramInfoLog(id, log_length, NULL, log);
+		printf("%s", log);
+		free(log);
+
+		return false;
 	}
+	return true;
+}
 
-	bool check_shader_compiled(GLuint id) {
-		GLint compiled = GL_FALSE;
-		glGetShaderiv(id, GL_COMPILE_STATUS, &compiled);
-		if(compiled != GL_TRUE) {
-			printf("Couldn't compile vertex shader. Printing log:\n");
-			GLint log_length = 0;
-			glGetShaderiv(id, GL_INFO_LOG_LENGTH, &log_length);
-			char* log = (char*)malloc(log_length);
-			glGetShaderInfoLog(id, log_length, NULL, log);
-			printf("%s", log);
-			free(log);
+shader shader::create(const char* vs, const char* fs) {
+	shader s;
+	s.id = glCreateProgram();
 
-			return false;
-		}
-		return true;
-	}
+	GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+	GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 
-	bool check_program_linked(GLuint id) {
-		GLint compiled = GL_FALSE;
-		glGetProgramiv(id, GL_LINK_STATUS, &compiled);
-		if (compiled != GL_TRUE) {
-			printf("Couldn't link program. Printing log:\n");
-			GLint log_length = 0;
-			glGetProgramiv(id, GL_INFO_LOG_LENGTH, &log_length);
-			char* log = (char*)malloc(log_length);
-			glGetProgramInfoLog(id, log_length, NULL, log);
-			printf("%s", log);
-			free(log);
+	//	Compile/link vertex shader
+	glShaderSource(vertex_shader, 1, &vs, NULL);
+	glCompileShader(vertex_shader);
+	if (check_shader_compiled(vertex_shader))
+		glAttachShader(s.id, vertex_shader);
+	else
+		return shader{};
 
-			return false;
-		}
-		return true;
-	}
+	//	Compile/link fragment shader
+	glShaderSource(fragment_shader, 1, &fs, NULL);
+	glCompileShader(fragment_shader);
+	if (check_shader_compiled(fragment_shader))
+		glAttachShader(s.id, fragment_shader);
+	else
+		return shader{};
 
-	int make(const char* vs_code, const char* fs_code) {
-		u32 id = next_available++;
-		GLuint* glid = (GLuint*)shader_array[id];
-		*glid = glCreateProgram();
+	glLinkProgram(s.id);
+	if (!check_program_linked(s.id))
+		return shader{};
 
-		GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-		GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+	return s;
+}
 
-		//	Compile/link vertex shader
-		glShaderSource(vertex_shader, 1, &vs_code, NULL);
-		glCompileShader(vertex_shader);
-		if(check_shader_compiled(vertex_shader))
-			glAttachShader(*glid, vertex_shader);
-		else
-			return -1;
+void shader::destroy() {
+	glDeleteShader(id);
+}
 
-		//	Compile/link fragment shader
-		glShaderSource(fragment_shader, 1, &fs_code, NULL);
-		glCompileShader(fragment_shader);
-		if(check_shader_compiled(fragment_shader))
-			glAttachShader(*glid, fragment_shader);
-		else
-			return -1;
+void shader::use() {
+	glUseProgram(id);
+}
 
-		glLinkProgram(*glid);
-		if (!check_program_linked(*glid))
-			return -1;
+int shader::get_attrib_location(const char* name) {
+	return glGetAttribLocation(id, name);
+}
 
-		return id;
-	}
-
-	void use(u32 id) {
-		glUseProgram(*(GLuint*)shader_array[id]);
-	}
-
-	GLint get_attrib_location(u32 id, const char* name) {
-		return glGetAttribLocation(*(GLuint*)shader_array[id], name);
-	}
-
-	GLint get_uniform_location(u32 id, const char* name) {
-		return glGetUniformLocation(*(GLuint*)shader_array[id], name);
-	}
+int shader::get_uniform_location(const char* name) {
+	return glGetUniformLocation(id, name);
 }

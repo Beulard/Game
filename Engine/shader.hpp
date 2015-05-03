@@ -1,22 +1,19 @@
 #include "types.hpp"
 //#include "GL/glew.h"
 
-namespace shader {
-
-	//	initializes the shader array
-	void init(u32 nb_shaders);
-	//	creates the shader program with vertex + fragment shaders and returns an id
-	int make(const char* vs_code, const char* fs_code);
-	//	cleans up all shaders stored by opengl
+class shader {
+public:
+	static shader create(const char* vertex_code, const char* fragment_code);
 	void destroy();
 
 	//	tells opengl to use this shader
-	void use(u32 id);
+	void use();
 
-	void add_attrib(const char* name);
 	//	return the attribute location of an attribute from the shader
-	int get_attrib_location(u32 id, const char* name);
+	int get_attrib_location(const char* name);
 	//	same for a uniform variable
-	int get_uniform_location(u32 id, const char* name);
+	int get_uniform_location(const char* name);
 
-}
+private:
+	u32 id;
+};

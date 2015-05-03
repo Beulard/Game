@@ -4,6 +4,7 @@
 #include "array.hpp"
 
 class texture;
+class shader;
 
 //	text is the equivalent to sprites, but for screen text
 //	it allows to draw individual characters to the screen given
@@ -33,7 +34,7 @@ namespace text {
 	//	it is used for optimized drawing of text by opengl
 	struct textbatch {
 		texture* texture;
-		u32 shader;
+		shader* shader;
 
 		u32 vbo;
 		int attrib_coords;

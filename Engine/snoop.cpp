@@ -90,7 +90,6 @@ namespace snoop {
 		load.bar = sprite::sprite::create(width / 10.f + 5, height - 65, 0, 50,
 		{ bar->x, bar->y, bar->x + bar->w, bar->y + bar->h }, { 0, 0, 0, 0 });
 
-		shader::init(4);
 		sprite::init(2);
 		sprite::set_projection(proj);
 		
@@ -105,12 +104,11 @@ namespace snoop {
 
 		resource::image_data* d = resource::get_image("loading_screen.png");
 		texture tex = texture::create(d->bytes, d->x, d->y, d->bpp);
-		u32 sh = shader::make(resource::get_shader("sprite.vs")->code, resource::get_shader("sprite.fs")->code);
+		shader sh = shader::create(resource::get_shader("sprite.vs")->code, resource::get_shader("sprite.fs")->code);
 
+		gb = sprite::make_batch(10, &gt, &sh);
 
-		gb = sprite::make_batch(10, &gt, sh);
-
-		load.batch = sprite::make_batch(3, &tex, sh);
+		load.batch = sprite::make_batch(3, &tex, &sh);
 
 
 		//	call game init function

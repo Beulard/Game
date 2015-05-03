@@ -29,21 +29,21 @@ namespace text {
 		batches = array::create(sizeof(textbatch), count);
 	}
 
-	int make_batch(u32 count, texture* texture, u32 shader) {
+	int make_batch(u32 count, texture* texture, shader* shader) {
 		u32 id = next_available++;
 		textbatch* batch = (textbatch*)batches[id];
 		batch->texture = texture;
 		batch->shader = shader;
 
 		glGenBuffers(1, &batch->vbo);
-
+		
 		//	assign each attribute and uniform required for rendering
-		batch->attrib_coords = shader::get_attrib_location(shader, "coords");
-		batch->attrib_texcoords = shader::get_attrib_location(shader, "texcoords");
-		batch->attrib_color = shader::get_attrib_location(shader, "color");
-		batch->attrib_outline_color = shader::get_attrib_location(shader, "outlinecolor");
-		batch->uniform_texture = shader::get_uniform_location(shader, "texture");
-		batch->uniform_projection = shader::get_uniform_location(shader, "projection");
+		batch->attrib_coords = shader->get_attrib_location("coords");
+		batch->attrib_texcoords = shader->get_attrib_location("texcoords");
+		batch->attrib_color = shader->get_attrib_location("color");
+		batch->attrib_outline_color = shader->get_attrib_location("outlinecolor");
+		batch->uniform_texture = shader->get_uniform_location("texture");
+		batch->uniform_projection = shader->get_uniform_location("projection");
 
 		batch->characters = array::create(sizeof(character), count);
 		return id;
@@ -155,7 +155,7 @@ namespace text {
 	void render_batch(u32 batch) {
 		textbatch* b = (textbatch*)batches[batch];
 		//	use opengl to render each sprite from the batch
-		shader::use(b->shader);
+		b->shader->use();
 		b->texture->bind();
 
 		//	normalize texture coordinates

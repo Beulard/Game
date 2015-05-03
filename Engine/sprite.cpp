@@ -25,7 +25,7 @@ namespace sprite {
 		batches = array::create(sizeof(spritebatch), count);
 	}
 
-	int make_batch(u32 count, texture* texture, u32 shader) {
+	int make_batch(u32 count, texture* texture, shader* shader) {
 		u32 id = next_available++;
 		spritebatch* batch = (spritebatch*)batches[id];
 		batch->texture = texture;
@@ -34,11 +34,11 @@ namespace sprite {
 		glGenBuffers(1, &batch->vbo);
 		
 		//	assign each attribute and uniform required for rendering
-		batch->attrib_coords = shader::get_attrib_location(shader, "coords");
-		batch->attrib_texcoords = shader::get_attrib_location(shader, "texcoords");
-		batch->attrib_color = shader::get_attrib_location(shader, "color");
-		batch->uniform_texture = shader::get_uniform_location(shader, "texture");
-		batch->uniform_projection = shader::get_uniform_location(shader, "projection");
+		batch->attrib_coords = shader->get_attrib_location("coords");
+		batch->attrib_texcoords = shader->get_attrib_location("texcoords");
+		batch->attrib_color = shader->get_attrib_location("color");
+		batch->uniform_texture = shader->get_uniform_location("texture");
+		batch->uniform_projection = shader->get_uniform_location("projection");
 
 		batch->sprites = array::create(sizeof(sprite), count);
 		return id;
@@ -136,7 +136,7 @@ namespace sprite {
 	void render_batch(u32 batch) {
 		spritebatch* b = (spritebatch*)batches[batch];
 		//	use opengl to render each sprite from the batch
-		shader::use(b->shader);
+		b->shader->use();
 		b->texture->bind();
 
 		//	normalize texture coordinates
