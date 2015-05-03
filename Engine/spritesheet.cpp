@@ -7,13 +7,16 @@ spritesheet spritesheet::create(const char* description) {
 	spritesheet s;
 	cJSON *root = NULL, *frames = NULL;
 	root = cJSON_Parse(description);
-	if (!root) 
+	if (!root)  {
 		printf("Invalid json file");
+		return spritesheet{};
+	}
 
 	frames = cJSON_GetObjectItem(root, "frames");
-	if (!frames)
+	if (!frames) {
 		printf("Invalid TexturePacker file");
-	
+		return spritesheet{};
+	}
 	u32 count = cJSON_GetArraySize(frames);
 	s.sprites = hashmap::create(sizeof(sprite_info), count);
 	for (u32 i = 0; i < count; ++i) {
